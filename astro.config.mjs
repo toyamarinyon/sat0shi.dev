@@ -8,6 +8,21 @@
 
 // @ts-check
 export default /** @type {import('astro').AstroUserConfig} */ ({
-	// Enable the Preact renderer to support Preact JSX components.
-	renderers: ['@astrojs/renderer-preact'],
+  // Enable the Preact renderer to support Preact JSX components.
+  markdownOptions: {
+    render: [
+      "@astrojs/markdown-remark",
+      {
+        // Pick a syntax highlighter. Can be 'prism' (default), 'shiki' or false to disable any highlighting.
+        syntaxHighlight: "shiki",
+        // If you are using shiki, here you can define a global theme and
+        // add custom languages.
+        shikiConfig: {
+          theme: "nord",
+          langs: ["typescript", "ts", "tsx"],
+          wrap: true,
+        },
+      },
+    ],
+  },
 });

@@ -12,9 +12,9 @@ interface MarkdownFrontmatter {
 // You can write any JavaScript/TypeScript that you'd like here.
 // It will run during the build, but never in the browser.
 // All variables are available to use in the HTML template below.
-let title = 'Example Blog';
+let title = 'COME COME TECHNOROGLY';
 let description = 'The perfect starter for your perfect blog.';
-let permalink = 'https://example.com/';
+let permalink = 'https://comecome.tech/';
 
 // Data Fetching: List all Markdown posts in the repo.
 
@@ -27,18 +27,9 @@ allPosts = allPosts.sort((a, b) => new Date(b.publishDate).valueOf() - new Date(
 
 <html lang="en">
 	<head>
-		<BaseHead {title} {description} {permalink} />
+		<BaseHead title={title} description={description} permalink={permalink} />
 
 		<style>
-			header {
-				width: 100%;
-				height: 100%;
-				background-color: var(--theme-bg-offset);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-
 			.content {
 				margin-top: 4rem;
 				margin-bottom: 8rem;
@@ -69,10 +60,6 @@ allPosts = allPosts.sort((a, b) => new Date(b.publishDate).valueOf() - new Date(
 		<BlogHeader />
 		<div class="wrapper">
 			<main class="content">
-				<section class="intro">
-					<h1 class="latest">{title}</h1>
-					<p>{description}</p>
-				</section>
 				<section aria-label="Blog post list">
 					{allPosts.map((p) => <BlogPostPreview post={p} />)}
 				</section>

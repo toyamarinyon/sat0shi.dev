@@ -8,7 +8,7 @@ const { post } = Astro.props;
 
 <article class="post-preview">
 	<header>
-		<p class="publish-date">{post.publishDate}</p>
+		<!-- <p class="publish-date">{post.publishDate}</p> -->
 		<a href={post.url}><h1 class="title">{post.title}</h1></a>
 	</header>
 	<p>{post.description}</p>
@@ -21,9 +21,10 @@ const { post } = Astro.props;
 	}
 
 	.post-preview {
-		padding-bottom: 2rem;
+		padding: 2rem;
 		margin-bottom: 2rem;
-		border-bottom: 4px solid var(--theme-divider);
+		background-color: var(--color-white);
+    box-shadow: 14px 14px 0px 0px rgba(var(--color-black-rgb), 1);
 	}
 
 	header {
@@ -31,8 +32,9 @@ const { post } = Astro.props;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		padding-bottom: 2rem;
 		text-align: left;
+		line-height: 1.12;
+		margin-bottom: 0.8rem;
 	}
 
 	.title,
@@ -46,10 +48,14 @@ const { post } = Astro.props;
 		font-size: 1.25rem;
 		color: var(--theme-text-lighter);
 	}
+	p {
+		line-height: 1.42;
+		margin-bottom: 0.5rem;
+	}
 
 	.title {
 		font-size: 2.25rem;
-		font-weight: 700;
+		font-weight: 900;
 		color: var(--theme-text);
 	}
 </style>

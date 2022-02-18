@@ -1,0 +1,485 @@
+---
+setup: |
+  import Layout from '../../layouts/BlogPost.astro'
+  import Callout from '../../components/Callout.astro'
+title: tRPC Fast Hands-on
+publishDate: 22 Feb 2022
+name: toyamarinyon
+value: 128
+description: I have created a demo that allows you to experience the key concept of tRPC in an instant, so please give it try!
+---
+
+Over the past two years, I've been trying with different approaches to building type-safe applications for Next.js.
+
+Finally, I discovered `tRPC`. It allows me to build end-to-end type-safe applications by using the server's type definitions as the client's schema, without the need for type generation like `graphql-codegen` or `openapi-codegen`. I have been using tRPC for 2 months now and highly recommend it.
+
+However, it takes time to start something new and be able to use it, doesn't it? tRPC has sample projects that you can start developing right away, but even so, you may put it off, saying, 'I will try it next time I have time'.
+
+So what if you could experience it in 5 minutes? Wouldn't you like to try it right now?
+That's why I have created a demo that allows you to experience the key concept of tRPC in an instant, so please give it try.
+
+# Let's start!
+
+The demo runs on StackBlitz, so let's start demo to click bellow button.
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/toyamarinyon/trpc-next-quick-start)
+
+You should see a page like this when you click button. This is the StackBlitz loading screen.
+
+![Stack Blitz loading screen](/assets/blog/trpc-hands-on/loading-screen.png)
+
+After about 20 seconds, you'll see the page change like this. This is the starter template page.
+
+![template page](/assets/blog/trpc-hands-on/template-page.png)
+
+<Callout label="tip">
+When after about 60 seconds, the page doesn't change, please reload page to click browser reload button.
+![Stack Blitz loading trouble](/assets/blog/trpc-hands-on/init-trouble.png)
+</Callout>
+
+
+On this page, you will display some posts retrieved by tRPC and also allow you to create posts with building a typesafe API with tRPC.
+
+<Callout label="tip">
+If you prefer to dive right into the finished code, click below button.
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/toyamarinyon/trpc-next-quick-start/tree/feat/finished)
+</Callout>
+
+
+
+## 1. Defining a router
+
+To start, this API will only contain two endpoints:
+
+```ts
+getPosts(id?: string) => { id: string; title: string; }
+createPost(data: {title:string}) => { id: string; title: string; }
+```
+
+### 1-1. Create a tRPC router
+
+First you implement our tRPC router. Create a `./pages/api/trpc/[trpc].ts` file with the following contents:
+
+```ts
+// pages/api/trpc/[trpc].ts
+import * as trpc from "@trpc/server";
+import * as trpcNext from "@trpc/server/adapters/next";
+const appRouter = trpc.router();
+
+// only export *type signature* of router!
+// to avoid accidentally importing your API
+// into client-side code
+export type AppRouter = typeof appRouter;
+
+// export API handler
+export default trpcNext.createNextApiHandler({
+  router: appRouter,
+  createContext: () => null,
+});
+```
+
+### 1-2. Add a query endpoint
+
+Use the `.query()` method to add a query endpoint to the router. Arguments:
+
+`.query(name: string, params: QueryParams)`
+
+- `name: string`: The name of this endpoint
+- `params.input`: Optional. This should be a function that validates/casts the _input_ of this endpoint and either returns a strongly typed value (if valid) or throws an error (if invalid). Alternatively you can pass a [Zod](https://github.com/colinhacks/zod), [Superstruct](https://github.com/ianstormtaylor/superstruct) or [Yup](https://github.com/jquense/yup) schema. Here we wil use `Zod`.
+- `params.resolve`: This is the actual implementation of the endpoint. It's a function with a single `req` argument. The validated input is passed into `req.input` and the context is in `req.ctx` (more about context later!)
+
+To this, add the code to validate input and to respond with dummy data. It looks like this. (Highlight the changed line)
+
+```ts {4-30}
+// pages/api/trpc/[trpc].ts
+import * as trpc from "@trpc/server";
+import * as trpcNext from "@trpc/server/adapters/next";
+import { z } from "zod";
+
+// We want to respond with Prisma data retrieved from the database,
+// but since StackBlitz cannot use Prisma, we will respond with dummy data.
+const posts = [
+  {
+    id: 1,
+    title: "This post come from trpc router!",
+  },
+  {
+    id: 2,
+    title: `Next, let's create a mutation!`,
+  },
+];
+
+const appRouter = trpc.router().query("posts", {
+  // validate input with Zod
+  input: z.object({ filter: z.string() }).nullish(),
+  async resolve({ input }) {
+    // if specify input.filter then we will find post matched by input.filter
+    // else return all posts
+    if (input?.filter == null || input.filter == "") {
+      return posts;
+    }
+    return posts.filter((post) => post.title.includes(input.filter));
+  },
+});
+
+// only export *type signature* of router!
+// to avoid accidentally importing your API
+// into client-side code
+export type AppRouter = typeof appRouter;
+
+// export API handler
+export default trpcNext.createNextApiHandler({
+  router: appRouter,
+  createContext: () => null,
+});
+```
+
+### 1-3. Add a mutation endpoint
+
+Similarly to GraphQL, tRPC makes a distinction between query and mutation endpoints.
+
+```ts
+createPost(payload: {title: string}) => {id: string; title: string};
+```
+
+Let's add a `createPost` mutation endpoint to the router.
+
+```ts {33-43}
+// pages/api/trpc/[trpc].ts
+import * as trpc from "@trpc/server";
+import * as trpcNext from "@trpc/server/adapters/next";
+import { z } from "zod";
+
+// We want to respond with Prisma data retrieved from the database,
+// but since StackBlitz cannot use Prisma, we will respond with dummy data.
+const posts = [
+  {
+    id: 1,
+    title: "This post come from trpc router!",
+  },
+  {
+    id: 2,
+    title: `Next, let's create a mutation!`,
+  },
+];
+
+const appRouter = trpc
+  .router()
+  .query("posts", {
+    // validate input with Zod
+    input: z.object({ filter: z.string() }).nullish(),
+    async resolve({ input }) {
+      // if specify input.filter then we will find post matched by input.filter
+      // else return all posts
+      if (input?.filter == null || input.filter == "") {
+        return posts;
+      }
+      return posts.filter((post) => post.title.includes(input.filter));
+    },
+  })
+  .mutation("createPost", {
+    // validate input with Zod
+    input: z.object({
+      title: z.string().min(5),
+    }),
+    async resolve({ input }) {
+      // We want to create data into Database with Prisma,
+      // but now we will respond dummy data.
+      return { id: 9999, title: input.title };
+    },
+  });
+
+// only export *type signature* of router!
+// to avoid accidentally importing your API
+// into client-side code
+export type AppRouter = typeof appRouter;
+
+// export API handler
+export default trpcNext.createNextApiHandler({
+  router: appRouter,
+  createContext: () => null,
+});
+```
+
+Now, you finished to create router 🎉
+Next, you will create a client with Next.js.
+
+## 2. Create tRPC hooks
+
+Create a set of strongly-typed hooks using your API's type signature.
+Let's create a `./utils/trpc.ts` file with the following contents:
+
+```typescript
+// utils/trpc.ts
+import { createReactQueryHooks } from "@trpc/react";
+import type { AppRouter } from "../pages/api/trpc/[trpc]";
+
+export const trpc = createReactQueryHooks<AppRouter>();
+```
+
+## 3. Configure \_app.tsx
+
+The createReactQueryHooks function expects certain parameters to be passed via the Context API. To set these parameters, create a custom \_app.tsx using the withTRPC higher-order component:
+
+```tsx {4-5,10-17}
+// pages/_app.tsx
+import "../styles/globals.css";
+import { AppType } from "next/dist/shared/lib/utils";
+import { withTRPC } from "@trpc/next";
+import { AppRouter } from "./api/trpc/[trpc]";
+
+const MyApp: AppType = ({ Component, pageProps }) => {
+  return <Component {...pageProps} />;
+};
+
+export default withTRPC<AppRouter>({
+  config() {
+    return {
+      url: "/api/trpc",
+    };
+  },
+})(MyApp);
+```
+
+When you updated the code, you will see an error in the preview window like this. Please reload preview window to click preview window reload button.
+
+![reload preview window](/assets/blog/trpc-hands-on/reload-preview.png)
+
+
+You're ready! Let's connect the server created now.
+
+## 4. Use query
+
+Open `src/index.tsx` then, add import `trpc hook`.
+
+```typescript {5}
+// pages/index.tsx
+import type { NextPage } from "next";
+import { FormEvent, useState } from "react";
+import styles from "../styles/Home.module.css";
+import { trpc } from "../utils/trpc";
+:
+:
+:
+```
+
+And, use tRPC query hook like this.
+
+**I strongly recommend typing it instead of copy and paste it.**
+
+```tsx {7}
+// pages/index.tsx
+:
+:
+const [title, setTitle] = useState("");
+const [filter, setFilter] = useState("");
+const [error, setError] = useState("");
+const query = trpc.useQuery(["posts"]); // 👈 Let's type it!
+:
+:
+```
+
+When you type `const query = trpc.useQuery(['p`, I think you see `posts` as a candidate, is it working?
+
+![useQuery](/assets/blog/trpc-hands-on/query-demo.gif)
+
+This is possible because tRPC use type information  of router that you just created as the scheme for client. You don't need to generate some file like GraphQL and OpenAPI!
+
+<Callout label="tip">
+We typed `trpc.useQuery(["p` to display the candidates. To enter `p` as the argument of `userQuery`, you need to remember that the route has "post" in it.
+
+In Visual Studio Code, **You can type only `trpc.useQuery(["` and get a list of query endpoints!**
+
+![useQuery](/assets/blog/trpc-hands-on/query-demo-vs.gif)
+
+Of corse, I think Stack Blitz also can it, but I don't know how to set to StackBlitz.
+</Callout>
+
+Next, display query result like this.
+
+```tsx {15-22}
+// pages/index.tsx
+return (
+    <section className={styles.container}>
+      <main className={styles.main}>
+        <header className={styles.title}>
+          <h1>tRPC fast hands-on 🚀</h1>
+        </header>
+      <section className={styles.controller}>
+        {/**
+          * some components
+          * :
+          * :
+          */}
+      </section>
+
+      <section className={styles.grid}>
+        {query.data?.map((data, i) => (
+          <article key={`article-${i}`} className={styles.card}>
+            <p>{data.title}</p>
+          </article>
+        ))}
+      </section>
+    </main>
+  </section>
+```
+
+`query.data` is also type safe, so you will type `data.` inside callback function in map then, appears candidates which `id` and `title`.
+
+![query result](/assets/blog/trpc-hands-on/query-result-demo.gif)
+
+Save the all file, you should see like this.
+
+![query screen](/assets/blog/trpc-hands-on/query.png)
+
+Congratulation 🎉 Next, you will create a filter with query hook.
+
+## 6. Use query variable
+
+Actually, there is a post filtering function by input.filter parameter on the server.
+
+```typescript
+// pages/api/trpc/[trpc].ts
+query("posts", {
+  // 👇 input schema
+  input: z.object({ filter: z.string() }).nullish(),
+  async resolve({ input }) {
+    if (input?.filter == null || input.filter == "") {
+      return posts;
+    }
+    // 👇 Filter posts that includes input.filter in the title
+    return posts.filter((post) => post.title.includes(input.filter));
+  },
+});
+```
+
+To use this function in hook, specify it as the first argument tuple.
+
+
+
+```typescript
+const query = trpc.useQuery(["posts", { filter: "filtering text" }]);
+//                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+There is a text field for filter and We've managed it value with `field` variable, so let's set it as a query parameter.
+
+```tsx {7}
+// pages/index.tsx
+:
+:
+const [title, setTitle] = useState("");
+const [filter, setFilter] = useState("");
+const [error, setError] = useState("");
+const query = trpc.useQuery(["posts", { filter }]);
+:
+:
+```
+
+It will now execute the query every time you type in the text field.
+![filter demo](/assets/blog/trpc-hands-on/filter-demo.gif)
+
+
+## 7. Use mutation
+
+Remember, we created createPost mutation at Step 1-3.
+
+```typescript
+createPost(payload: {title: string}) => {id: string; title: string};
+```
+
+In client, we can mutate to use `useMutation` hook like that.
+
+```tsx {8}
+// pages/index.tsx
+:
+:
+const [title, setTitle] = useState("");
+const [filter, setFilter] = useState("");
+const [error, setError] = useState("");
+const query = trpc.useQuery(["posts", { filter }]);
+const createPost = trpc.useMutation(["createPost"]);
+:
+:
+```
+
+Next, let's run this hook when the user submits the form.
+Since text field value in post form is managed by `title` state, you will set to mutate param it.
+
+```ts
+// Text field value in post form is already managed by `title` state
+const [title, setTitle] = useState("");
+```
+
+And our code has a submit handler like this, so you will mutate there.
+
+```ts
+async function submitNewPost(e: FormEvent) {
+  e.preventDefault();
+  alert(`Let's implement create post mutation`);
+}
+```
+
+Like this, remove alert function, and add following code.
+
+```ts {6-14}
+// pages/index.tsx
+async function submitNewPost(e: FormEvent) {
+  e.preventDefault();
+  // 👇 remove this line ✂️
+  // alert(`Let's implement create post mutation`);
+  setError("");
+  try {
+    await createPost.mutateAsync({ title });
+    alert('Successfully created a post!')
+  } catch (error) {
+    if (error instanceof TRPCClientError) {
+      setError(error.message);
+    }
+  }
+}
+```
+
+You will see an error "Cannot find name 'TRPCClientError'", so import this.
+
+```tsx {6}
+// pages/index.tsx
+import { TRPCClientError } from "@trpc/client";
+import type { NextPage } from "next";
+import { FormEvent, useState } from "react";
+import styles from "../styles/Home.module.css";
+import { TRPCClientError } from "@trpc/client";
+```
+
+Now that you have created the Create post mutation, you can click the ✏️ button, fill in the form, and click the Create button to send the data to the server.
+
+![new post](/assets/blog/trpc-hands-on/new-post.gif)
+
+If text that filled in is less than 5 characters long, an error message will be displayed above the form. It's provided by tRPC input validation with Zod. 
+
+![error](/assets/blog/trpc-hands-on/error.gif)
+
+
+You just defined the scheme, you didn't create any input validation. However, tRPC and Zod make it possible with their schemes. 
+
+This hand-on is finished! 👏
+
+## Conclusion
+
+I don't think tRPC will solve all problems like the Swiss Army Knife or Silver Bullet, but I do think it will significantly increase the speed of launching a product.
+
+Especially I consider it has a high affinity for developer who want to build type-safe applications but feel GraphQL and OpenAPI are overreaching.
+
+Some of you who have read this far may have the following questions:
+
+- "I know the basics, but can I implement a real world application or use case?"
+
+- "Can I implement authentication and error handling?"
+
+- "Can I implement localization?"
+
+The answer is yes. I deploy application with tRPC to Vercel and get paid by my clients.
+This application uses firebase authentication to authenticate user and UI is Japanese.
+
+Once again, I will explain how to authenticate and localize and more. If you are curios it, please follow [my twitter account](https://twitter.com/toyamarinyon), I'll let you know.

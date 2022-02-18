@@ -11,11 +11,17 @@ const { title, description, publishDate, author, heroImage, permalink, alt } = c
 <html lang={content.lang || 'en'}>
 	<head>
 		<BaseHead {title} {description} {permalink} />
+		<style>
+		.content {
+margin-top: 4rem;
+				margin-bottom: 8rem;			
+		}
+		</style>
 	</head>
 
 	<body>
 		<BlogHeader />
-		<div class="wrapper">
+		<div class="wrapper content">
 			<BlogPost {title} {author} {heroImage} {publishDate} {alt}>
 				<slot />
 			</BlogPost>

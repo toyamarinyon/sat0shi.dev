@@ -2,15 +2,15 @@
 setup: |
   import Layout from '../../layouts/BlogPost.astro'
   import Cool from '../../components/Author.astro'
-title: Hello world!
-publishDate: 12 Sep 2021
-name: Nate Moore
+title: What is the technology for building portfolio website or blog in 2022
+publishDate: 20 Feb 2022
+name: toyamarinyon
 value: 128
-description: Just a Hello World Post!
+description: I highly recommend the Astro that is a modern static site builder. So I will explain to prefer it.
 ---
 
 <Cool name={frontmatter.name} href="https://twitter.com/n_moore" client:load />
 
-This is so cool!
+This is so cool!!
 
 Do variables work {frontmatter.value * 2}?
