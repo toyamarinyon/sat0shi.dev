@@ -1,61 +1,61 @@
 ---
 export interface Props {
-	post: any;
+  post: any;
 }
 
 const { post } = Astro.props;
 ---
 
 <article class="post-preview">
-	<header>
-		<!-- <p class="publish-date">{post.publishDate}</p> -->
-		<a href={post.url}><h1 class="title">{post.title}</h1></a>
-	</header>
-	<p>{post.description}</p>
-	<a href={post.url}>Read more</a>
+  <header>
+    <!-- <p class="publish-date">{post.publishDate}</p> -->
+    <a href={post.url}><h1 class="title">{post.title}</h1></a>
+  </header>
+  <p>{post.description}</p>
+  <a href={post.url}>Read more</a>
 </article>
 
 <style>
-	.content :global(main > * + *) {
-		margin-top: 1rem;
-	}
+  .content :global(main > * + *) {
+    margin-top: 1rem;
+  }
 
-	.post-preview {
-		padding: 2rem;
-		margin-bottom: 2rem;
-		background-color: var(--color-white);
+  .post-preview {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background-color: var(--color-white);
     box-shadow: 14px 14px 0px 0px rgba(var(--color-black-rgb), 1);
-	}
+  }
 
-	header {
-		align-items: flex-start;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		text-align: left;
-		line-height: 1.12;
-		margin-bottom: 0.8rem;
-	}
+  header {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    line-height: 1.12;
+    margin-bottom: 0.8rem;
+  }
 
-	.title,
-	.author,
-	.publish-date {
-		margin: 0;
-	}
+  .title,
+  .author,
+  .publish-date {
+    margin: 0;
+  }
 
-	.publish-date,
-	.author {
-		font-size: 1.25rem;
-		color: var(--theme-text-lighter);
-	}
-	p {
-		line-height: 1.42;
-		margin-bottom: 0.5rem;
-	}
+  .publish-date,
+  .author {
+    font-size: 1.25rem;
+    color: var(--theme-text-lighter);
+  }
+  p {
+    line-height: 1.42;
+    margin-bottom: 0.5rem;
+  }
 
-	.title {
-		font-size: 2.25rem;
-		font-weight: 900;
-		color: var(--theme-text);
-	}
+  .title {
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: var(--theme-text);
+  }
 </style>

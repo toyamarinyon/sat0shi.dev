@@ -1,10 +1,8 @@
 ---
-
-
 export interface Props {
-	title: string;
-	description: string;
-	permalink: string;
+  title: string;
+  description: string;
+  permalink: string;
 }
 const { title, description, permalink } = Astro.props;
 ---
@@ -35,11 +33,13 @@ const { title, description, permalink } = Astro.props;
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.gstatic.com" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;700&display=swap" />
-<style>
-	@import url("https://fonts.googleapis.com/css2?family=Bungee+Shade&family=DotGothic16&family=Gluten:wght@100;600&family=Rubik+Mono+One&display=swap");
-</style>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;700&display=swap"
+/>
 
-<style global>
-	@import "../styles/blog.css";
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Bungee+Shade&family=DotGothic16&family=Gluten:wght@100;600&family=Rubik+Mono+One&display=swap");
+</style><style global>
+  @import "../styles/blog.css";
 </style>

@@ -298,8 +298,11 @@ blockquote .source {
 
 article img {
   max-width: 100%;
-  margin-top: 1.0rem;
-  margin-bottom: 1.0rem;
+}
+
+.callout img {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .highlighted {
@@ -322,5 +325,3 @@ html[data-theme="dark"] .highlighted {
   /* Color which works with dark mode syntax highlighting theme */
   background-color: rgb(100, 100, 100);
 }
-
-

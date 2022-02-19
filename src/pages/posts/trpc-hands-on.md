@@ -37,7 +37,6 @@ When after about 60 seconds, the page doesn't change, please reload page to clic
 ![Stack Blitz loading trouble](/assets/blog/trpc-hands-on/init-trouble.png)
 </Callout>
 
-
 On this page, you will display some posts retrieved by tRPC and also allow you to create posts with building a typesafe API with tRPC.
 
 <Callout label="tip">
@@ -45,8 +44,6 @@ If you prefer to dive right into the finished code, click below button.
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/toyamarinyon/trpc-next-quick-start/tree/feat/finished)
 </Callout>
-
-
 
 ## 1. Defining a router
 
@@ -246,7 +243,6 @@ When you updated the code, you will see an error in the preview window like this
 
 ![reload preview window](/assets/blog/trpc-hands-on/reload-preview.png)
 
-
 You're ready! Let's connect the server created now.
 
 ## 4. Use query
@@ -284,7 +280,7 @@ When you type `const query = trpc.useQuery(['p`, I think you see `posts` as a ca
 
 ![useQuery](/assets/blog/trpc-hands-on/query-demo.gif)
 
-This is possible because tRPC use type information  of router that you just created as the scheme for client. You don't need to generate some file like GraphQL and OpenAPI!
+This is possible because tRPC use type information of router that you just created as the scheme for client. You don't need to generate some file like GraphQL and OpenAPI!
 
 <Callout label="tip">
 We typed `trpc.useQuery(["p` to display the candidates. To enter `p` as the argument of `userQuery`, you need to remember that the route has "post" in it.
@@ -356,8 +352,6 @@ query("posts", {
 
 To use this function in hook, specify it as the first argument tuple.
 
-
-
 ```typescript
 const query = trpc.useQuery(["posts", { filter: "filtering text" }]);
 //                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -379,7 +373,6 @@ const query = trpc.useQuery(["posts", { filter }]);
 
 It will now execute the query every time you type in the text field.
 ![filter demo](/assets/blog/trpc-hands-on/filter-demo.gif)
-
 
 ## 7. Use mutation
 
@@ -432,7 +425,7 @@ async function submitNewPost(e: FormEvent) {
   setError("");
   try {
     await createPost.mutateAsync({ title });
-    alert('Successfully created a post!')
+    alert("Successfully created a post!");
   } catch (error) {
     if (error instanceof TRPCClientError) {
       setError(error.message);
@@ -456,12 +449,11 @@ Now that you have created the Create post mutation, you can click the ✏️ but
 
 ![new post](/assets/blog/trpc-hands-on/new-post.gif)
 
-If text that filled in is less than 5 characters long, an error message will be displayed above the form. It's provided by tRPC input validation with Zod. 
+If text that filled in is less than 5 characters long, an error message will be displayed above the form. It's provided by tRPC input validation with Zod.
 
 ![error](/assets/blog/trpc-hands-on/error.gif)
 
-
-You just defined the scheme, you didn't create any input validation. However, tRPC and Zod make it possible with their schemes. 
+You just defined the scheme, you didn't create any input validation. However, tRPC and Zod make it possible with their schemes.
 
 This hand-on is finished! 👏
 

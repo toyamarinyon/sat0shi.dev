@@ -1,18 +1,18 @@
 ---
-import { Markdown } from 'astro/components';
+import { Markdown } from "astro/components";
 export interface Props {
-	label: string;
+  label: string;
 }
 
 const { label } = Astro.props;
-function upperCaseFirst(string: string) {
-
-}
+function upperCaseFirst(string: string) {}
 ---
 
 <div class={`callout ${label}`}>
   <h4>{label}</h4>
-  <Markdown><slot /></Markdown>
+  <Markdown>
+    <slot />
+  </Markdown>
 </div>
 
 <style>

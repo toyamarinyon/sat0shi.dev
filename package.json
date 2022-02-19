@@ -6,11 +6,13 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "format": "yarn prettier -w ."
   },
   "devDependencies": {
     "astro": "/Users/toyamarinyon/repositories/github.com/toyamarinyon/astro/packages/astro",
-    "sass": "^1.49.7"
+    "sass": "^1.49.7",
+    "prettier-plugin-astro": "^0.0.12"
   },
   "resolutions": {
     "@astrojs/markdown-remark": "/Users/toyamarinyon/repositories/github.com/toyamarinyon/astro/packages/markdown/remark"

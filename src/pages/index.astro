@@ -1,69 +1,72 @@
 ---
 // Component Imports
-import BaseHead from '../components/BaseHead.astro';
-import BlogHeader from '../components/BlogHeader.astro';
-import BlogPostPreview from '../components/BlogPostPreview.astro';
+import BaseHead from "../components/BaseHead.astro";
+import BlogHeader from "../components/BlogHeader.astro";
+import BlogPostPreview from "../components/BlogPostPreview.astro";
 
 interface MarkdownFrontmatter {
-	publishDate: number;
+  publishDate: number;
 }
 
 // Component Script:
 // You can write any JavaScript/TypeScript that you'd like here.
 // It will run during the build, but never in the browser.
 // All variables are available to use in the HTML template below.
-let title = 'COME COME TECHNOROGLY';
-let description = 'The perfect starter for your perfect blog.';
-let permalink = 'https://comecome.tech/';
+let title = "COME COME TECHNOROGLY";
+let description = "The perfect starter for your perfect blog.";
+let permalink = "https://comecome.tech/";
 
 // Data Fetching: List all Markdown posts in the repo.
 
-let allPosts = await Astro.fetchContent('./posts/*.md');
-allPosts = allPosts.sort((a, b) => new Date(b.publishDate).valueOf() - new Date(a.publishDate).valueOf());
+let allPosts = await Astro.fetchContent("./posts/*.md");
+allPosts = allPosts.sort(
+  (a, b) =>
+    new Date(b.publishDate).valueOf() - new Date(a.publishDate).valueOf()
+);
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 ---
 
 <html lang="en">
-	<head>
-		<BaseHead title={title} description={description} permalink={permalink} />
+  <head>
+    <BaseHead {title} {description} {permalink} />
 
-		<style>
-			.content {
-				margin-top: 4rem;
-				margin-bottom: 8rem;
-			}
+    <style>
+      .content {
+        margin-top: 4rem;
+        margin-bottom: 8rem;
+      }
 
-			.content :global(main > * + *) {
-				margin-top: 1rem;
-			}
+      .content :global(main > * + *) {
+        margin-top: 1rem;
+      }
 
-			.intro {
-				padding-bottom: 4rem;
-				margin-bottom: 2rem;
-				border-bottom: 4px solid var(--theme-divider);
-			}
+      .intro {
+        padding-bottom: 4rem;
+        margin-bottom: 2rem;
+        border-bottom: 4px solid var(--theme-divider);
+      }
 
-			.intro > * {
-				margin: 0;
-			}
+      .intro > * {
+        margin: 0;
+      }
 
-			.latest {
-				font-size: 2.5rem;
-				font-weight: 700;
-			}
-		</style>
-	</head>
+      .latest {
+        font-size: 2.5rem;
+        font-weight: 700;
+      }
+    </style>
+  </head>
 
-	<body>
-		<BlogHeader />
-		<div class="wrapper">
-			<main class="content">
-				<section aria-label="Blog post list">
-					{allPosts.map((p) => <BlogPostPreview post={p} />)}
-				</section>
-			</main>
-		</div>
-	</body>
+  <body>
+    <BlogHeader />
+    <div class="wrapper">
+      <main class="content">
+        <section aria-label="Blog post list">
+          {allPosts.map((p) => <BlogPostPreview post={p} />)}
+        </section>
+      </main>
+    </div>
+  </body>
 </html>

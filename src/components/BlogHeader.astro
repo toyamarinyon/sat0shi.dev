@@ -1,78 +1,87 @@
 ---
-import Logo from './Logo.astro'
+import Logo from "./Logo.astro";
 ---
+
 <header class="header-wrapper">
-	<article>
-		<h1>
-			<a href="/">
-				<Logo />
-			</a>
-		</h1>
-	</article>
+  <section>
+    <article>
+      <h1>
+        <a href="/">
+          <Logo />
+        </a>
+      </h1>
+    </article>
+    <nav>
+      <a href="/about">about</a>
+    </nav>
+  </section>
 </header>
 
 <style>
-	header {
-		margin-top: 2rem;
-	margin-left: auto;
-	margin-right: auto;
-	max-width: 46em;
-	padding-left: 2rem;
-	padding-right: 2rem;
-	width: 100%;
+  header {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 46em;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    width: 100%;
 
-	padding-top: 1rem;
-		padding-bottom: 1rem;
-		/* height: 5rem; */
-	}
-	article {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-	.header-subitem {
-		display: flex;
-		flex-grow: 0;
-		gap: 0.5em;
-		align-items: center;
-		justify-content: center;
-		color: var(--theme-text-lighter);
-		font-size: initial;
-		padding: 0.5rem;
-	}
-	.header-subitem:hover {
-		color: var(--theme-accent);
-	}
-	.header-subitem svg {
-		width: 1.5rem;
-		height: 1.5rem;
-	}
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  article {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .header-subitem {
+    display: flex;
+    flex-grow: 0;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: center;
+    color: var(--theme-text-lighter);
+    font-size: initial;
+    padding: 0.5rem;
+  }
+  .header-subitem:hover {
+    color: var(--theme-accent);
+  }
+  .header-subitem svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 
-	@media (max-width: 32em) {
-		.header-subitem {
-			display: none;
-		}
-	}
+  @media (max-width: 32em) {
+    .header-subitem {
+      display: none;
+    }
+  }
 
-	h1 {
-		margin: 0;
-		font-size: 1.5rem;
-		max-width: 100%;
-		display: flex;
-		flex-grow: 1;
-	}
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    max-width: 100%;
+    display: flex;
+    flex-grow: 1;
+  }
 
-	.logo {
-		transform: translateY(0.25rem);
-	}
+  .logo {
+    transform: translateY(0.25rem);
+  }
 
-	/* svg {
+  /* svg {
 		width: 2.5rem;
 		height: 2.5rem;
 	} */
 
-	h1 a {
-		text-decoration: none;
-		display: inline-flex;
-	}
+  h1 a {
+    text-decoration: none;
+    display: inline-flex;
+  }
+  section {
+    display: flex;
+    justify-content: space-between;
+  }
 </style>
