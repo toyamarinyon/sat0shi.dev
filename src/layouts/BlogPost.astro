@@ -4,13 +4,21 @@ import BlogHeader from "../components/BlogHeader.astro";
 import BlogPost from "../components/BlogPost.astro";
 
 const { content } = Astro.props;
-const { title, description, publishDate, author, heroImage, permalink, alt, social } =
-  content;
+const {
+  title,
+  description,
+  publishDate,
+  author,
+  heroImage,
+  permalink,
+  alt,
+  social,
+} = content;
 ---
 
 <html lang={content.lang || "en"}>
   <head>
-    <BaseHead {title} {description} {permalink} {social}/>
+    <BaseHead {title} {description} {permalink} {social} />
     <style>
       .content {
         margin-top: 1rem;

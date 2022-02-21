@@ -1,6 +1,6 @@
 ---
 // Component Imports
-import {Markdown} from "astro/components"
+import { Markdown } from "astro/components";
 import BaseHead from "../components/BaseHead.astro";
 import BlogHeader from "../components/BlogHeader.astro";
 import BlogPostPreview from "../components/BlogPostPreview.astro";
@@ -14,17 +14,20 @@ interface MarkdownFrontmatter {
 // You can write any JavaScript/TypeScript that you'd like here.
 // It will run during the build, but never in the browser.
 // All variables are available to use in the HTML template below.
-let title = "COME COME TECHNOROGLY";
-let description = "The perfect starter for your perfect blog.";
-let permalink = "https://comecome.tech/";
+let title = "Satoshi Toyama | Developer";
+let description =
+  "I'm a software developer in Japan. I'm considering how to write code clarity.";
+let permalink = "https://sat0shi.dev/";
 
 // Data Fetching: List all Markdown posts in the repo.
 
 let allPosts = await Astro.fetchContent("./posts/*.md");
-allPosts = allPosts.filter((post)=> post.draft == null || post.draft == false).sort(
-  (a, b) =>
-    new Date(b.publishDate).valueOf() - new Date(a.publishDate).valueOf()
-);
+allPosts = allPosts
+  .filter((post) => post.draft == null || post.draft == false)
+  .sort(
+    (a, b) =>
+      new Date(b.publishDate).valueOf() - new Date(a.publishDate).valueOf()
+  );
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
@@ -61,7 +64,7 @@ allPosts = allPosts.filter((post)=> post.draft == null || post.draft == false).s
       h1 {
         font-size: 2.3rem;
         /* font-weight: normal; */
-        color: var(--color-gray-900)
+        color: var(--color-gray-900);
       }
       .wrapper {
         margin-top: 1.2rem;
@@ -73,7 +76,7 @@ allPosts = allPosts.filter((post)=> post.draft == null || post.draft == false).s
         color: var(--color-gray-900);
         font-size: 1.2rem;
         /* font-weight: bold; */
-        line-height: 1.2
+        line-height: 1.2;
       }
       header p strong {
         color: var(--theme-accent);
@@ -92,8 +95,8 @@ allPosts = allPosts.filter((post)=> post.draft == null || post.draft == false).s
       }
       @media (min-width: 37.75em) {
         header img {
-              height: 4rem;
-            }
+          height: 4rem;
+        }
       }
       header .hi {
         font-size: 3rem;
@@ -105,12 +108,17 @@ allPosts = allPosts.filter((post)=> post.draft == null || post.draft == false).s
     <BlogHeader />
     <div class="wrapper">
       <main class="content">
-      <header>
-      <div class="hi">
-      <img src="/assets/hi.png" /> <span>👋</span>
-      </div>
-      <p>I'm a software developer in Japan. I'm considering how to write <strong>code clarity</strong>.</p>
-      </header>
+        <header>
+          <div class="hi">
+            <img src="/assets/hi.png" />
+            <span>👋</span>
+          </div>
+          <p>
+            I'm a software developer in Japan. I'm considering how to write <strong
+              >code clarity</strong
+            >.
+          </p>
+        </header>
 
         <section aria-label="Blog post list">
           {allPosts.map((p) => <BlogPostPreview post={p} />)}

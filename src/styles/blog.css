@@ -28,7 +28,7 @@
   --color-green-rgb: 23, 192, 131;
   --color-orange: #ff5d01;
   --color-orange-rgb: 255, 93, 1;
-  --color-purple: #7240A5;
+  --color-purple: #7240a5;
   --color-purple-rgb: 114, 64, 165;
   --color-red: #ff1639;
   --color-red-rgb: 255, 22, 57;
@@ -262,7 +262,7 @@ pre {
   transform: translateX(-50vw); */
 
   line-height: 1.5;
-  width:100%;
+  width: 100%;
   /* width: calc(100vw + (var(--padding-inline) * 2));
   max-width: calc(100% + (var(--padding-inline) * 2)); */
   overflow-y: hidden;
