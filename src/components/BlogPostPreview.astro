@@ -12,7 +12,7 @@ const { post } = Astro.props;
     <a href={post.url}><h1 class="title">{post.title}</h1></a>
   </header>
   <p>{post.description}</p>
-  <a href={post.url}>Read more</a>
+  <a href={post.url} class="readmore">Read more</a>
 </article>
 
 <style>
@@ -21,10 +21,28 @@ const { post } = Astro.props;
   }
 
   .post-preview {
+    position: relative;
     padding: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     background-color: var(--color-white);
-    box-shadow: 14px 14px 0px 0px rgba(var(--color-black-rgb), 1);
+    /* box-shadow: 14px 14px 0px 0px rgba(var(--color-black-rgb), 1); */
+    z-index:1;
+  }
+  .post-preview:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translate(-4px, -4px);
+    border: solid 2px var(--color-pink)    ;
+  }
+  .post-preview:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translate(4px, 4px);
+    border: solid 2px var(--color-purple)    ;
   }
 
   header {
@@ -57,5 +75,8 @@ const { post } = Astro.props;
     font-size: 2.25rem;
     font-weight: 900;
     color: var(--theme-text);
+  }
+  .readmore {
+    color: var(--theme-accent);
   }
 </style>

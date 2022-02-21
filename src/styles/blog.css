@@ -28,8 +28,8 @@
   --color-green-rgb: 23, 192, 131;
   --color-orange: #ff5d01;
   --color-orange-rgb: 255, 93, 1;
-  --color-purple: #882de7;
-  --color-purple-rgb: 136, 45, 231;
+  --color-purple: #7240A5;
+  --color-purple-rgb: 114, 64, 165;
   --color-red: #ff1639;
   --color-red-rgb: 255, 22, 57;
   --color-pink: #e22166;
@@ -50,7 +50,7 @@
   --theme-text: var(--color-gray-800);
   --theme-text-light: var(--color-gray-600);
   --theme-text-lighter: var(--color-gray-400);
-  --theme-bg: var(--bg-color);
+  --theme-bg: var(--color-gray-200);
   --theme-bg-offset: var(--color-gray-100);
   --theme-bg-accent: rgba(var(--theme-accent-rgb), var(--theme-accent-opacity));
   --theme-code-inline-bg: var(--color-gray-100);
@@ -77,10 +77,10 @@ body {
   --theme-code-bg: var(--color-gray-900);
 }
 
-::selection {
+/* ::selection {
   color: var(--theme-accent);
   background-color: rgba(var(--theme-accent-rgb), var(--theme-accent-opacity));
-}
+} */
 
 * {
   box-sizing: border-box;
@@ -112,10 +112,24 @@ body {
 .wrapper {
   margin-left: auto;
   margin-right: auto;
-  max-width: 44em;
+  max-width: 46em;
   padding-left: 2rem;
   padding-right: 2rem;
   width: 100%;
+}
+.wrapper-post {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 46em;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  width: 100%;
+}
+@media (min-width: 37.75em) {
+  .wrapper-post {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 nav ul {
@@ -168,7 +182,7 @@ small,
 }
 
 a {
-  color: var(--theme-accent);
+  color: var(--gray-900);
   font-weight: 400;
   text-underline-offset: 0.08em;
   text-decoration: none;
@@ -243,22 +257,23 @@ pre {
   --padding-block: 1rem;
   --padding-inline: 2rem;
   padding: var(--padding-block) var(--padding-inline);
-  padding-right: calc(var(--padding-inline) * 2);
+  /* padding-right: calc(var(--padding-inline) * 2);
   margin-left: calc(50vw - var(--padding-inline));
-  transform: translateX(-50vw);
+  transform: translateX(-50vw); */
 
-  line-height: 1.414;
-  width: calc(100vw + (var(--padding-inline) * 2));
-  max-width: calc(100% + (var(--padding-inline) * 2));
+  line-height: 1.5;
+  width:100%;
+  /* width: calc(100vw + (var(--padding-inline) * 2));
+  max-width: calc(100% + (var(--padding-inline) * 2)); */
   overflow-y: hidden;
   overflow-x: auto;
 }
 
 @media (min-width: 37.75em) {
-  pre {
-    --padding-inline: 1.25rem;
+  /* pre {
+    --padding-inline: 2rem;
     border-radius: 8px;
-  }
+  } */
 }
 
 .flex {
@@ -307,17 +322,13 @@ article img {
 
 .highlighted {
   --padding-inline: 2rem;
+  line-height: 1.7rem;
   display: block;
   background-color: rgb(72, 77, 91);
   margin-left: calc(-1 * var(--padding-inline));
   padding-left: calc(var(--padding-inline));
-  margin-right: calc(-1 * var(--padding-inline) * 2);
-  padding-right: calc(var(--padding-inline) * 2);
-}
-@media (min-width: 37.75em) {
-  .highlighted {
-    --padding-inline: 1.25rem;
-  }
+  margin-right: calc(-1 * var(--padding-inline));
+  padding-right: calc(var(--padding-inline));
 }
 
 /* If you have a different syntax highlighting theme for dark mode. */

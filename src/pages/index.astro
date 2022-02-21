@@ -1,11 +1,13 @@
 ---
 // Component Imports
+import {Markdown} from "astro/components"
 import BaseHead from "../components/BaseHead.astro";
 import BlogHeader from "../components/BlogHeader.astro";
 import BlogPostPreview from "../components/BlogPostPreview.astro";
 
 interface MarkdownFrontmatter {
   publishDate: number;
+  draft?: boolean;
 }
 
 // Component Script:
@@ -19,7 +21,7 @@ let permalink = "https://comecome.tech/";
 // Data Fetching: List all Markdown posts in the repo.
 
 let allPosts = await Astro.fetchContent("./posts/*.md");
-allPosts = allPosts.sort(
+allPosts = allPosts.filter((post)=> post.draft == null || post.draft == false).sort(
   (a, b) =>
     new Date(b.publishDate).valueOf() - new Date(a.publishDate).valueOf()
 );
@@ -34,7 +36,7 @@ allPosts = allPosts.sort(
 
     <style>
       .content {
-        margin-top: 4rem;
+        /* margin-top: 4rem; */
         margin-bottom: 8rem;
       }
 
@@ -56,6 +58,46 @@ allPosts = allPosts.sort(
         font-size: 2.5rem;
         font-weight: 700;
       }
+      h1 {
+        font-size: 2.3rem;
+        /* font-weight: normal; */
+        color: var(--color-gray-900)
+      }
+      .wrapper {
+        margin-top: 1.2rem;
+      }
+      header {
+        margin-bottom: 3rem;
+      }
+      header p {
+        color: var(--color-gray-900);
+        font-size: 1.2rem;
+        /* font-weight: bold; */
+        line-height: 1.2
+      }
+      header p strong {
+        color: var(--theme-accent);
+        font-weight: 900;
+      }
+      header img {
+        height: 2rem;
+      }
+      header .hi {
+        display: flex;
+        align-items: center;
+        font-size: 4rem;
+      }
+      header .hi img {
+        margin-right: 1rem;
+      }
+      @media (min-width: 37.75em) {
+        header img {
+              height: 4rem;
+            }
+      }
+      header .hi {
+        font-size: 3rem;
+      }
     </style>
   </head>
 
@@ -63,6 +105,13 @@ allPosts = allPosts.sort(
     <BlogHeader />
     <div class="wrapper">
       <main class="content">
+      <header>
+      <div class="hi">
+      <img src="/assets/hi.png" /> <span>👋</span>
+      </div>
+      <p>I'm a software developer in Japan. I'm considering how to write <strong>code clarity</strong>.</p>
+      </header>
+
         <section aria-label="Blog post list">
           {allPosts.map((p) => <BlogPostPreview post={p} />)}
         </section>

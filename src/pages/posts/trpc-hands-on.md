@@ -5,8 +5,8 @@ setup: |
 title: tRPC Fast Hands-on
 publishDate: 22 Feb 2022
 name: toyamarinyon
-value: 128
 description: I have created a demo that allows you to experience the key concept of tRPC in an instant, so please give it try!
+social: /assets/blog/trpc-hands-on/social.png
 ---
 
 Over the past two years, I've been trying with different approaches to building type-safe applications for Next.js.

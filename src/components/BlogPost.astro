@@ -12,7 +12,7 @@ export interface Props {
 const { title, author, publishDate, heroImage, alt } = Astro.props;
 ---
 
-<div class="layout">
+<div class="layout post">
   <article class="content">
     <div>
       <header>
@@ -102,9 +102,28 @@ const { title, author, publishDate, heroImage, alt } = Astro.props;
     font-weight: 900;
   }
   .layout {
+    position: relative;
+    z-index: 1;
     padding: 2rem;
     margin-bottom: 2rem;
     background-color: var(--color-white);
-    box-shadow: 14px 14px 0px 0px rgba(var(--color-black-rgb), 1);
+        /* box-shadow: 14px 14px 0px 0px rgba(var(--color-black-rgb), 1); */
   }
+    .layout:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translate(-4px, -4px);
+    border: solid 2px var(--color-pink)    ;
+  }
+  .layout:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translate(4px, 4px);
+    border: solid 2px var(--color-purple)    ;
+  }
+
 </style>

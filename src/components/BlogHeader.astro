@@ -1,19 +1,21 @@
 ---
 import Logo from "./Logo.astro";
+const {} = Astro.props;
 ---
 
 <header class="header-wrapper">
   <section>
-    <article>
-      <h1>
-        <a href="/">
-          <Logo />
-        </a>
-      </h1>
-    </article>
     <nav>
-      <a href="/about">about</a>
+      <a href="/" class="active">home</a>
     </nav>
+    <section class="socials">
+    <a class="social github" href="https://github.com/toyamarinyon" target="_blank">
+    <img src="/assets/github.png" />
+    </a>
+    <a class="social" href="https://twitter.com/toyamarinyon" target="_blank">
+    <img src="/assets/twitter.png" />
+    </a>
+    </section>
   </section>
 </header>
 
@@ -25,9 +27,9 @@ import Logo from "./Logo.astro";
     padding-left: 2rem;
     padding-right: 2rem;
     width: 100%;
-
     padding-top: 1rem;
     padding-bottom: 1rem;
+    margin-top: 1rem;
   }
   article {
     display: flex;
@@ -83,5 +85,22 @@ import Logo from "./Logo.astro";
   section {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+  }
+  nav a {
+    text-transform: capitalize;
+  }
+  nav a.active {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  .social img {
+    height: 1.4rem;
+  }
+  .social.github img {
+    height: 1.6rem;
+  }
+  .socials a + a {
+    margin-left: 1.4rem;
   }
 </style>
