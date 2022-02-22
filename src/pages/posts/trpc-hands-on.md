@@ -2,6 +2,7 @@
 setup: |
   import Layout from '../../layouts/BlogPost.astro'
   import Callout from '../../components/Callout.astro'
+  import NewTabLink from '../../components/NewTabLink.astro'
 title: tRPC Fast Hands-on
 publishDate: 22 Feb 2022
 name: toyamarinyon
@@ -21,7 +22,9 @@ That's why I have created a demo that allows you to experience the key concept o
 
 The demo runs on StackBlitz, so let's start demo to click bellow button.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/toyamarinyon/trpc-next-quick-start)
+<NewTabLink href="https://stackblitz.com/github/toyamarinyon/trpc-next-quick-start">
+  <img src="https://developer.stackblitz.com/img/open_in_stackblitz.svg" />
+</NewTabLink>
 
 You should see a page like this when you click button. This is the StackBlitz loading screen.
 
@@ -41,7 +44,10 @@ On this page, you will display some posts retrieved by tRPC and also allow you t
 <Callout label="tip">
 If you prefer to dive right into the finished code, click below button.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/toyamarinyon/trpc-next-quick-start/tree/feat/finished)
+<NewTabLink href="https://stackblitz.com/github/toyamarinyon/trpc-next-quick-start/tree/feat/finished">
+  <img src="https://developer.stackblitz.com/img/open_in_stackblitz.svg" />
+</NewTabLink>
+
 </Callout>
 
 ## 1. Defining a router
