@@ -10,11 +10,8 @@
     "format": "yarn prettier -w ."
   },
   "devDependencies": {
-    "astro": "/Users/toyamarinyon/repositories/github.com/toyamarinyon/astro/packages/astro",
-    "sass": "^1.49.7",
-    "prettier-plugin-astro": "^0.0.12"
-  },
-  "resolutions": {
-    "@astrojs/markdown-remark": "/Users/toyamarinyon/repositories/github.com/toyamarinyon/astro/packages/markdown/remark"
+    "astro": "^0.22.17",
+    "prettier-plugin-astro": "^0.0.12",
+    "rehype-prism-plus": "^1.3.1"
   }
 }

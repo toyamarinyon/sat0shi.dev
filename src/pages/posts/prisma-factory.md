@@ -13,7 +13,7 @@ However, when you register data with the seed script, you need to enter all the 
 
 Let's consider the following table as an example
 
-```prisma
+```ts
 model User {
   id        Int       @id @default(autoincrement())
   email     String    @unique
@@ -63,7 +63,7 @@ So I thought that one of the ideal development flows would be to have a factory 
 
 Prisma has a good mechanism called generator, so I used it to create a generator called `prisma-factory-generator` that creates a factory from Prisma's Scheme.
 
-https://github.com/toyamarinyon/prisma-factory-generator
+[https://github.com/toyamarinyon/prisma-factory-generator](https://github.com/toyamarinyon/prisma-factory-generator)
 
 Using this, we can rewrite the previous seed script to look like this.
 
@@ -75,13 +75,12 @@ const chance = await createUser({ userName: "chance" });
 ```
 
 I think `Prisma-factory-generator` is useful not only for seeding but also for test code, so please try it if you like.
-If you have a case where it doesn't work, please send an issue to
-
-https://github.com/toyamarinyon/prisma-factory-generator/issues
+If you have a case where it doesn't work, please send an issue to [https://github.com/toyamarinyon/prisma-factory-generator/issues](https://github.com/toyamarinyon/prisma-factory-generator/issues).
 
 ## Special Thanks
 
 The idea of creating a factory with Prisma generator is based on Chris Ball’s presentation at Prisma Day 2021.
 
-discussion: https://github.com/echobind/prisma-factory/discussions/1
-presentation: https://www.youtube.com/watch?v=a5S5thDd7Xg
+discussion: [https://github.com/echobind/prisma-factory/discussions/1](https://github.com/echobind/prisma-factory/discussions/1)
+
+presentation: [https://www.youtube.com/watch?v=a5S5thDd7Xg](https://www.youtube.com/watch?v=a5S5thDd7Xg)

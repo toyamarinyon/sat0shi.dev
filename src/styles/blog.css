@@ -185,7 +185,6 @@ a {
   color: var(--gray-900);
   font-weight: 400;
   text-underline-offset: 0.08em;
-  text-decoration: none;
   align-items: center;
   gap: 0.5rem;
 }
@@ -250,32 +249,6 @@ pre > code:not([class*="language"]) {
   color: inherit;
 }
 
-pre {
-  position: relative;
-  background-color: var(--theme-code-bg);
-  color: var(--theme-code-text);
-  --padding-block: 1rem;
-  --padding-inline: 2rem;
-  padding: var(--padding-block) var(--padding-inline);
-  /* padding-right: calc(var(--padding-inline) * 2);
-  margin-left: calc(50vw - var(--padding-inline));
-  transform: translateX(-50vw); */
-
-  line-height: 1.5;
-  width: 100%;
-  /* width: calc(100vw + (var(--padding-inline) * 2));
-  max-width: calc(100% + (var(--padding-inline) * 2)); */
-  overflow-y: hidden;
-  overflow-x: auto;
-}
-
-@media (min-width: 37.75em) {
-  /* pre {
-    --padding-inline: 2rem;
-    border-radius: 8px;
-  } */
-}
-
 .flex {
   display: flex;
   align-items: center;
@@ -318,21 +291,4 @@ article img {
 .callout img {
   margin-top: 1rem;
   margin-bottom: 1rem;
-}
-
-.highlighted {
-  --padding-inline: 2rem;
-  line-height: 1.7rem;
-  display: block;
-  background-color: rgb(72, 77, 91);
-  margin-left: calc(-1 * var(--padding-inline));
-  padding-left: calc(var(--padding-inline));
-  margin-right: calc(-1 * var(--padding-inline));
-  padding-right: calc(var(--padding-inline));
-}
-
-/* If you have a different syntax highlighting theme for dark mode. */
-html[data-theme="dark"] .highlighted {
-  /* Color which works with dark mode syntax highlighting theme */
-  background-color: rgb(100, 100, 100);
 }
