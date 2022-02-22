@@ -6,7 +6,7 @@ title: tRPC Fast Hands-on
 publishDate: 22 Feb 2022
 name: toyamarinyon
 description: I have created a demo that allows you to experience the key concept of tRPC in an instant, so please give it try!
-social: /assets/blog/trpc-hands-on/social.png
+social: /assets/posts/trpc-hands-on/social.png
 ---
 
 Over the past two years, I've been trying with different approaches to building type-safe applications for Next.js.
@@ -26,15 +26,15 @@ The demo runs on StackBlitz, so let's start demo to click bellow button.
 
 You should see a page like this when you click button. This is the StackBlitz loading screen.
 
-![Stack Blitz loading screen](/assets/blog/trpc-hands-on/loading-screen.png)
+![Stack Blitz loading screen](/assets/posts/trpc-hands-on/loading-screen.png)
 
 After about 20 seconds, you'll see the page change like this. This is the starter template page.
 
-![template page](/assets/blog/trpc-hands-on/template-page.png)
+![template page](/assets/posts/trpc-hands-on/template-page.png)
 
 <Callout label="tip">
 When after about 60 seconds, the page doesn't change, please reload page to click browser reload button.
-![Stack Blitz loading trouble](/assets/blog/trpc-hands-on/init-trouble.png)
+![Stack Blitz loading trouble](/assets/posts/trpc-hands-on/init-trouble.png)
 </Callout>
 
 On this page, you will display some posts retrieved by tRPC and also allow you to create posts with building a typesafe API with tRPC.
@@ -241,7 +241,7 @@ export default withTRPC<AppRouter>({
 
 When you updated the code, you will see an error in the preview window like this. Please reload preview window to click preview window reload button.
 
-![reload preview window](/assets/blog/trpc-hands-on/reload-preview.png)
+![reload preview window](/assets/posts/trpc-hands-on/reload-preview.png)
 
 You're ready! Let's connect the server created now.
 
@@ -278,7 +278,7 @@ const query = trpc.useQuery(["posts"]); // 👈 Let's type it!
 
 When you type `const query = trpc.useQuery(['p`, I think you see `posts` as a candidate, is it working?
 
-![useQuery](/assets/blog/trpc-hands-on/query-demo.gif)
+![useQuery](/assets/posts/trpc-hands-on/query-demo.gif)
 
 This is possible because tRPC use type information of router that you just created as the scheme for client. You don't need to generate some file like GraphQL and OpenAPI!
 
@@ -287,7 +287,7 @@ We typed `trpc.useQuery(["p` to display the candidates. To enter `p` as the argu
 
 In Visual Studio Code, **You can type only `trpc.useQuery(["` and get a list of query endpoints!**
 
-![useQuery](/assets/blog/trpc-hands-on/query-demo-vs.gif)
+![useQuery](/assets/posts/trpc-hands-on/query-demo-vs.gif)
 
 Of corse, I think Stack Blitz also can it, but I don't know how to set to StackBlitz.
 </Callout>
@@ -323,11 +323,11 @@ return (
 
 `query.data` is also type safe, so you will type `data.` inside callback function in map then, appears candidates which `id` and `title`.
 
-![query result](/assets/blog/trpc-hands-on/query-result-demo.gif)
+![query result](/assets/posts/trpc-hands-on/query-result-demo.gif)
 
 Save the all file, you should see like this.
 
-![query screen](/assets/blog/trpc-hands-on/query.png)
+![query screen](/assets/posts/trpc-hands-on/query.png)
 
 Congratulation 🎉 Next, you will create a filter with query hook.
 
@@ -372,7 +372,7 @@ const query = trpc.useQuery(["posts", { filter }]);
 ```
 
 It will now execute the query every time you type in the text field.
-![filter demo](/assets/blog/trpc-hands-on/filter-demo.gif)
+![filter demo](/assets/posts/trpc-hands-on/filter-demo.gif)
 
 ## 7. Use mutation
 
@@ -447,11 +447,11 @@ import { TRPCClientError } from "@trpc/client";
 
 Now that you have created the Create post mutation, you can click the ✏️ button, fill in the form, and click the Create button to send the data to the server.
 
-![new post](/assets/blog/trpc-hands-on/new-post.gif)
+![new post](/assets/posts/trpc-hands-on/new-post.gif)
 
 If text that filled in is less than 5 characters long, an error message will be displayed above the form. It's provided by tRPC input validation with Zod.
 
-![error](/assets/blog/trpc-hands-on/error.gif)
+![error](/assets/posts/trpc-hands-on/error.gif)
 
 You just defined the scheme, you didn't create any input validation. However, tRPC and Zod make it possible with their schemes.
 

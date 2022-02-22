@@ -5,11 +5,13 @@ export interface Props {
   permalink: string;
   social?: string;
 }
+const defaultSocial = new URL(`/assets${Astro.request.canonicalURL.pathname}social.png`, Astro.site)
+
 const {
   title,
   description,
-  permalink,
-  social = "/assets/social.png",
+  permalink = `${Astro.request.canonicalURL}`,
+  social = defaultSocial,
 } = Astro.props;
 ---
 
