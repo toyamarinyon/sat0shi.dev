@@ -1,4 +1,4 @@
-# Astro Starter Kit: Blog
+# sat0shi.dev
 
 ```
 npm init astro -- --template blog
