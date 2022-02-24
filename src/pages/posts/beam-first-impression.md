@@ -2,10 +2,10 @@
 setup: |
   import Layout from '../../layouts/BlogPost.astro'
   import Callout from '../../components/Callout.astro'
-title: beam 1st impression
+title: Beam 1st impression
 publishDate: 24 Feb 2022
 name: toyamarinyon
-description: I tried beam that private blog tool built by PlanetScale. It allows to create blog faster that only can access organization member.
+description: I tried Beam that private blog tool built by PlanetScale. It allows to create blog faster that only can access organization member.
 ---
 I'm trying different approaches to quickly share documents while restricting access such as Notion and Slack and GitHub.
 
