@@ -9,10 +9,8 @@
 // @ts-check
 export default /** @type {import('astro').AstroUserConfig} */ ({
   // Enable the Preact renderer to support Preact JSX components.
-  buildOptions: {
-    site: "https://sat0shi.dev",
-  },
-  markdownOptions: {
+  site: "https://sat0shi.dev",
+  markdown: {
     render: [
       "@astrojs/markdown-remark",
       {
