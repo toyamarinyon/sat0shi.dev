@@ -1,12 +1,12 @@
 ---
-setup: |
-  import Layout from '../../layouts/BlogPost.astro'
-  import Callout from '../../components/Callout.astro'
+layout: "../../layouts/BlogPost.astro"
 title: Use factory to simplify prisma seed
 publishDate: 9 Dec 2021
 name: toyamarinyon
 description: I will introduce a generator called `prisma-factory-generator` that creates a factory from Prisma's Scheme.
 ---
+
+import Callout from "../../components/Callout.astro";
 
 Prisma provides the ability to seed data. Once configured, it is convenient to create a seed with the script `npx prisma db seed`.
 However, when you register data with the seed script, you need to enter all the parameters, which is a tedious aspect of preparation.

@@ -7,11 +7,14 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "format": "yarn prettier -w ."
+    "format": "pnpm prettier -w ."
   },
   "devDependencies": {
-    "astro": "latest",
-    "prettier-plugin-astro": "^0.0.12",
+    "astro": "1.6.14",
+    "prettier-plugin-astro": "0.7.0",
     "rehype-prism-plus": "^1.3.1"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^0.12.1"
   }
 }

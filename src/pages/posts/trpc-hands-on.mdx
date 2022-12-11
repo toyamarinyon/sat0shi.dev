@@ -1,13 +1,13 @@
 ---
-setup: |
-  import Layout from '../../layouts/BlogPost.astro'
-  import Callout from '../../components/Callout.astro'
-  import NewTabLink from '../../components/NewTabLink.astro'
+layout: "../../layouts/BlogPost.astro"
 title: tRPC Fast Hands-on
 publishDate: 22 Feb 2022
 name: toyamarinyon
 description: I have created a demo that allows you to experience the key concept of tRPC in an instant, so please give it try!
 ---
+
+import Callout from "../../components/Callout.astro";
+import NewTabLink from "../../components/NewTabLink.astro";
 
 Over the past two years, I've been trying with different approaches to building type-safe applications for Next.js.
 
@@ -35,8 +35,9 @@ After about 20 seconds, you'll see the page change like this. This is the starte
 ![template page](/assets/posts/trpc-hands-on/template-page.png)
 
 <Callout label="tip">
-When after about 60 seconds, the page doesn't change, please reload page to click browser reload button.
-![Stack Blitz loading trouble](/assets/posts/trpc-hands-on/init-trouble.png)
+  When after about 60 seconds, the page doesn't change, please reload page to
+  click browser reload button. ![Stack Blitz loading
+  trouble](/assets/posts/trpc-hands-on/init-trouble.png)
 </Callout>
 
 On this page, you will display some posts retrieved by tRPC and also allow you to create posts with building a typesafe API with tRPC.
@@ -295,6 +296,7 @@ In Visual Studio Code, **You can type only `trpc.useQuery(["` and get a list of 
 ![useQuery](/assets/posts/trpc-hands-on/query-demo-vs.gif)
 
 Of corse, I think Stack Blitz also can it, but I don't know how to set to StackBlitz.
+
 </Callout>
 
 Next, display query result like this.
