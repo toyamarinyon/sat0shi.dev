@@ -8,16 +8,23 @@
 import rehypePrism from "rehype-prism-plus";
 
 // @ts-check
-export default /** @type {import('astro').AstroUserConfig} */ ({
-  // Enable the Preact renderer to support Preact JSX components.
-  site: "https://sat0shi.dev",
-  markdown: {
-    syntaxHighlight: false,
-    rehypePlugins: [rehypePrism],
-    shikiConfig: {
-      theme: "nord",
-      langs: ["typescript", "ts", "tsx"],
-      wrap: true,
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+
+// https://astro.build/config
+export default defineConfig(
+  /** @type {import('astro').AstroUserConfig} */ {
+    // Enable the Preact renderer to support Preact JSX components.
+    site: "https://sat0shi.dev",
+    markdown: {
+      syntaxHighlight: false,
+      rehypePlugins: [rehypePrism],
+      shikiConfig: {
+        theme: "nord",
+        langs: ["typescript", "ts", "tsx"],
+        wrap: true,
+      },
     },
-  },
-});
+    integrations: [mdx()],
+  }
+);

@@ -20,7 +20,7 @@ let permalink = Astro.site;
 
 // Data Fetching: List all Markdown posts in the repo.
 
-let allPosts = await Astro.glob<MarkdownFrontmatter>("./posts/*.md");
+let allPosts = await Astro.glob<MarkdownFrontmatter>("./posts/*.mdx");
 allPosts = allPosts
   .filter((post) => post.frontmatter.draft == null || post.frontmatter.draft == false)
   .sort(

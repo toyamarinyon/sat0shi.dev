@@ -1,17 +1,17 @@
 {
-	"compilerOptions": {
-		"allowJs": true,
-		"declaration": true,
-		"emitDeclarationOnly": true,
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"baseUrl": ".",
-		"moduleResolution": "node",
-		"module": "ES2020",
-		"target": "ES2020",
-		"outDir": "./dist",
-		"types": ["vite/client"]
-	}
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "module": "ES2020",
+    "target": "ES2020",
+    "outDir": "./dist",
+    "types": ["vite/client"]
+  }
 }
