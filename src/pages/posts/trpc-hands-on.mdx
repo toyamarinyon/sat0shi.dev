@@ -64,8 +64,7 @@ createPost(data: {title:string}) => { id: string; title: string; }
 
 First you implement our tRPC router. Create a `./pages/api/trpc/[trpc].ts` file with the following contents:
 
-```ts
-// pages/api/trpc/[trpc].ts
+```ts showLineNumbers title="pages/api/trpc/[trpc].ts"
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 const appRouter = trpc.router();
@@ -94,8 +93,7 @@ Use the `.query()` method to add a query endpoint to the router. Arguments:
 
 To this, add the code to validate input and to respond with dummy data. It looks like this. (Highlight the changed line)
 
-```ts {4-30}
-// pages/api/trpc/[trpc].ts
+```ts {3-29} showLineNumbers title="pages/api/trpc/[trpc].ts"
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { z } from "zod";
@@ -148,8 +146,7 @@ createPost(payload: {title: string}) => {id: string; title: string};
 
 Let's add a `createPost` mutation endpoint to the router.
 
-```ts {33-43}
-// pages/api/trpc/[trpc].ts
+```ts {32-42} showLineNumbers title="pages/api/trpc/[trpc].ts"
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { z } from "zod";
@@ -213,8 +210,7 @@ Next, you will create a client with Next.js.
 Create a set of strongly-typed hooks using your API's type signature.
 Let's create a `./utils/trpc.ts` file with the following contents:
 
-```typescript
-// utils/trpc.ts
+```typescript title="utils/trpc.ts" showLineNumbers
 import { createReactQueryHooks } from "@trpc/react";
 import type { AppRouter } from "../pages/api/trpc/[trpc]";
 
@@ -225,8 +221,7 @@ export const trpc = createReactQueryHooks<AppRouter>();
 
 The createReactQueryHooks function expects certain parameters to be passed via the Context API. To set these parameters, create a custom \_app.tsx using the withTRPC higher-order component:
 
-```tsx {4-5,10-17}
-// pages/_app.tsx
+```tsx {3-4,10-17} title="pages/_app.tsx" showLineNumbers
 import "../styles/globals.css";
 import { AppType } from "next/dist/shared/lib/utils";
 import { withTRPC } from "@trpc/next";
@@ -255,8 +250,7 @@ You're ready! Let's connect the server created now.
 
 Open `src/index.tsx` then, add import `trpc hook`.
 
-```typescript {5}
-// pages/index.tsx
+```typescript {4} title="pages/index.tsx" showLineNumbers
 import type { NextPage } from "next";
 import { FormEvent, useState } from "react";
 import styles from "../styles/Home.module.css";
@@ -270,8 +264,7 @@ And, use tRPC query hook like this.
 
 **I strongly recommend typing it instead of copy and paste it.**
 
-```tsx {7}
-// pages/index.tsx
+```tsx {6} title="pages/index.tsx" showLineNumbers
 :
 :
 const [title, setTitle] = useState("");
@@ -301,8 +294,7 @@ Of corse, I think Stack Blitz also can it, but I don't know how to set to StackB
 
 Next, display query result like this.
 
-```tsx {15-22}
-// pages/index.tsx
+```tsx {14-21} title="pages/index.tsx" showLineNumbers
 return (
     <section className={styles.container}>
       <main className={styles.main}>
@@ -342,8 +334,7 @@ Congratulation 🎉 Next, you will create a filter with query hook.
 
 Actually, there is a post filtering function by input.filter parameter on the server.
 
-```typescript
-// pages/api/trpc/[trpc].ts
+```typescript title="pages/api/trpc/[trpc].ts" showLineNumbers
 query("posts", {
   // 👇 input schema
   input: z.object({ filter: z.string() }).nullish(),
@@ -366,8 +357,7 @@ const query = trpc.useQuery(["posts", { filter: "filtering text" }]);
 
 There is a text field for filter and We've managed it value with `field` variable, so let's set it as a query parameter.
 
-```tsx {7}
-// pages/index.tsx
+```tsx {6} showLineNumbers title="pages/index.tsx"
 :
 :
 const [title, setTitle] = useState("");
@@ -391,8 +381,7 @@ createPost(payload: {title: string}) => {id: string; title: string};
 
 In client, we can mutate to use `useMutation` hook like that.
 
-```tsx {8}
-// pages/index.tsx
+```tsx {7} showLineNumbers title="pages/index.tsx"
 :
 :
 const [title, setTitle] = useState("");
@@ -423,8 +412,7 @@ async function submitNewPost(e: FormEvent) {
 
 Like this, remove alert function, and add following code.
 
-```ts {6-14}
-// pages/index.tsx
+```ts {5-13} showLineNumbers title="pages/index.tsx" 
 async function submitNewPost(e: FormEvent) {
   e.preventDefault();
   // 👇 remove this line ✂️
@@ -443,8 +431,7 @@ async function submitNewPost(e: FormEvent) {
 
 You will see an error "Cannot find name 'TRPCClientError'", so import this.
 
-```tsx {6}
-// pages/index.tsx
+```tsx {5} showLineNumbers title="pages/index.tsx"
 import { TRPCClientError } from "@trpc/client";
 import type { NextPage } from "next";
 import { FormEvent, useState } from "react";

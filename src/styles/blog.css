@@ -249,10 +249,10 @@ pre > code:not([class*="language"]) {
   color: inherit;
 }
 
-.flex {
+/* .flex {
   display: flex;
   align-items: center;
-}
+} */
 
 img.cover {
   width: 100%;
