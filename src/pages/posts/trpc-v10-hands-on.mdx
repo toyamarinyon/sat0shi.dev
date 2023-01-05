@@ -25,11 +25,11 @@ If you click the bellow button, you can proceed with this hands-on on StackBlitz
 
 You should see a page like this when you click the button. This is the StackBlitz loading screen.
 
-![StackBlitz loading page](/assets/posts/trpc@10-hands-on/stackblitz-init.jpeg)
+![StackBlitz loading page](/assets/posts/trpc-v10-hands-on/stackblitz-init.jpeg)
 
 After about 20 seconds, you'll see the page change like this. This is the starter template page.
 
-![running local server on StackBlitz](/assets/posts/trpc@10-hands-on/running-dev-server-on-stackblitz.jpeg)
+![running local server on StackBlitz](/assets/posts/trpc-v10-hands-on/running-dev-server-on-stackblitz.jpeg)
 
 
 On this page, you will display some posts retrieved by tRPC and also allow you to create posts by building a typesafe API with tRPC.
@@ -257,7 +257,7 @@ const query = trpc.posts.useQuery(); // 👈 Let's type it!
 
 When you type `const query = trpc.`, I think you see `posts` as a candidate, is it working?
 
-![useQuery](/assets/posts/trpc@10-hands-on/query-demo.gif)
+![useQuery](/assets/posts/trpc-v10-hands-on/query-demo.gif)
 
 This is possible because tRPC use type information of router that you just created as the scheme for client. You don't need to generate some file like GraphQL and OpenAPI!
 
@@ -287,11 +287,11 @@ return (
 
 `query.data` is also type safe, so you will type `data.` inside callback function in map then, appears candidates which `id` and `title`.
 
-![type-safe-response](/assets/posts/trpc@10-hands-on/query-response-demo.gif)
+![type-safe-response](/assets/posts/trpc-v10-hands-on/query-response-demo.gif)
 
 You see the following display on your local server, right?
 
-![Expected image of implemented the query](/assets/posts/trpc@10-hands-on/expect-query.jpeg)
+![Expected image of implemented the query](/assets/posts/trpc-v10-hands-on/expect-query.jpeg)
 
 ## Use query variable
 
@@ -308,7 +308,7 @@ Set filter state to useQuery args:
 <Callout label="note">
   If you type `useQuery({ f`, editor suggests `filter` field.
 
-  ![useQuery](/assets/posts/trpc@10-hands-on/suggest-filter.gif)
+  ![useQuery](/assets/posts/trpc-v10-hands-on/suggest-filter.gif)
 
   This is another power of tRPC. You can use the input scheme declared on the server as the interface of the query variable on the client. 
 
@@ -358,7 +358,7 @@ Next, mutate on submitting the form.
 
 Then, you can create a post with tRPC!
 
-  ![useQuery](/assets/posts/trpc@10-hands-on/mutation-demo.gif)
+  ![useQuery](/assets/posts/trpc-v10-hands-on/mutation-demo.gif)
 
 
 # Conclusion
