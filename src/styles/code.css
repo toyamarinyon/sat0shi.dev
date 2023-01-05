@@ -27,7 +27,11 @@ div[data-rehype-pretty-code-fragment] .line {
 
 div[data-rehype-pretty-code-fragment] .highlighted {
   @apply border-blue-400;
-  background-color: rgba(200,200,255,.1);
+  background-color: rgba(200, 200, 255, .2);
+}
+
+div[data-rehype-pretty-code-fragment] .word {
+  @apply bg-blue-200 text-white
 }
 
 div[data-rehype-pretty-code-fragment] code[data-line-numbers] {

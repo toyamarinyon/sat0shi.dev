@@ -154,6 +154,7 @@ nav ul {
 
 h1 {
   font-size: clamp(2.488rem, 1.924rem + 1.41vw, 3.052rem);
+  line-height: 1.1;
 }
 
 h2 {
@@ -187,6 +188,7 @@ a {
   text-underline-offset: 0.08em;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: underline;
 }
 
 a > code:not([class*="language"]) {
