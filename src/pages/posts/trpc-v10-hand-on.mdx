@@ -1,0 +1,289 @@
+---
+layout: "../../layouts/BlogPost.astro"
+title: tRPC@10 Fast Hands-on
+publishDate: 3 Jan 2023
+name: toyamarinyon
+description: I have created a demo that allows you to experience the key concept of tRPC in an instant, so please give it try!
+---
+
+import Callout from "../../components/Callout.astro";
+import NewTabLink from "../../components/NewTabLink.astro";
+
+Last year I wrote a [tRPC hands-on](/posts/trpc-hands-on). And I've glad to read it from many developers.
+
+However, tRPC is now v10 released, and there are many aspects of tRPC that need to be addressed in the above hands-on.
+
+So, in this post, I'll show you tRPC@10 hands-on. Please give it a try.
+
+# StackBlitz ready
+
+If you click the bellow button, you can proceed with this hands-on on StackBlitz.(Of course, you can do it locally too.)
+
+You should see a page like this when you click the button. This is the StackBlitz loading screen.
+
+After about 20 seconds, you'll see the page change like this. This is the starter template page.
+
+On this page, you will display some posts retrieved by tRPC and also allow you to create posts by building a typesafe API with tRPC.
+
+# Defining a backend router
+
+To start, this API will only contain two endpoints with these TypeScript signatures:
+
+```ts
+posts() => { id: string; title: string; }
+postCreate(data: { title: string }) => { id: string; title: string; }
+```
+
+## Create a router instance.
+
+First, let's define an empty router in our server codebase. Create `sever/routers/_app.ts` as follows:
+
+```ts showLineNumbers title="server/routers/_app.ts"
+import { initTRPC } from "@trpc/server";
+const t = initTRPC.create();
+
+export const appRouter = t.router({});
+// Export type router type signature,
+// NOT the router itself.
+export type AppRouter = typeof appRouter;
+```
+
+## Add a query procedure
+
+Use the `t.procedure.query()` to add a query procedure/endpoint to the router. The two methods on this procedure are:
+
+- `input`(optional): When provided, this should be a function that validates and casts the input of this procedure. It should return a strongly typed value when the input is valid or throw an error if the input is invalid. We recommend using a TypeScript validation library like [Zod](https://github.com/colinhacks/zod), [Superstruct](https://github.com/ianstormtaylor/superstruct) or [Yup](https://github.com/jquense/yup) for input validation.
+- `query`: This is the implementation of the procedure (a "resolver"). It's a function with a single `req` argument to represent the incoming request. The validated (and strongly typed!) input is passed into `req.input`.
+
+The following creates a query procedure called `posts` that returns posts object:
+
+```ts showLineNumbers {2, 5-19, 22-35} title="server/routers/_app.ts"
+import * as trpc from "@trpc/server";
+import { z } from 'zod';
+const t = initTRPC.create();
+
+interface Post {
+  id: string;
+  title: string;
+}
+
+const postList: Post[] = [
+  {
+    id: "1",
+    title: "Hello tRPC!!",
+  },
+  {
+    id: "2",
+    title: "How are you?",
+  }
+];
+
+export const appRouter = t.router({
+  posts: t.procedure
+    .input(
+      z
+        .object({
+          filter: z.string(),
+        })
+        .nullish()
+    )
+    .query(({ input }) => {
+      if (input?.filter == null || input.filter == '') {
+        return postList;
+      }
+      return postList.filter((post) => post.title.includes(input.filter));
+    }),
+});
+
+// Export type router type signature,
+// NOT the router itself.
+export type AppRouter = typeof appRouter;
+```
+
+## Add a mutation procedure
+
+Similar to GraphQL, tRPC makes a distinction between query and mutation procedures.
+
+The way a procedure works on the server doesn't change much between a query and a mutation. The method name is different, and the way that the client will use this procedure changes - but everything else is the same!
+
+Let's add a postCreate mutation by adding it as a new property on our router object:
+
+```ts showLineNumbers title="server/routers/_app.ts" {36-49}
+import * as trpc from "@trpc/server";
+import { z } from 'zod';
+const t = initTRPC.create();
+
+interface Post {
+  id: string;
+  title: string;
+}
+
+const postList: Post[] = [
+  {
+    id: "1",
+    title: "Hello tRPC!!",
+  },
+  {
+    id: "2",
+    title: "How are you?",
+  }
+];
+
+export const appRouter = t.router({
+  posts: t.procedure
+    .input(
+      z
+        .object({
+          filter: z.string(),
+        })
+        .nullish()
+    )
+    .query(({ input }) => {
+      if (input?.filter == null || input.filter == '') {
+        return postList;
+      }
+      return postList.filter((post) => post.title.includes(input.filter));
+    }),
+  postCreate: t.procedure
+    .input(z.object({ title: z.string() }))
+    .mutation((req) => {
+      const id = `${Math.random()}`;
+ 
+      const post: Post = {
+        id,
+        title: req.input.title,
+      };
+ 
+      postList.push(post);
+ 
+      return post;
+    }),
+});
+
+// Export type router type signature,
+// NOT the router itself.
+export type AppRouter = typeof appRouter;
+```
+
+## Export API handler
+
+Next, expose your router as an API of Next.js. 
+
+Create `pages/api/trpc/[trpc].ts` and do the following:
+
+```ts showLineNumbers title="pages/api/trpc/[trpc].ts"
+import * as trpcNext from '@trpc/server/adapters/next';
+import { appRouter } from '../../../server/routers/_app';
+
+// export API handler
+export default trpcNext.createNextApiHandler({
+  router: appRouter,
+  createContext: () => ({}),
+});
+```
+
+
+Now, you finished to create router 🎉 Next, you will create a client with Next.js.
+
+# Create tRPC utility for frontend and interact with a backend router
+
+Create a tRPC utility for Next.js using your API's type signature.
+Let's create a `./utils/trpc.ts` file with the following contents:
+
+```typescript showLineNumbers title="utils/trpc.ts"
+import { httpBatchLink } from '@trpc/client';
+import { createTRPCNext } from '@trpc/next';
+import type { AppRouter } from '../server/routers/_app'
+
+export const trpc = createTRPCNext<AppRouter>({
+  config({ ctx }) {
+    return {
+      links: [
+        httpBatchLink({
+          url: '/api/trpc/',
+        }),
+      ],
+    };
+  },
+});
+```
+
+##  Configure \_app.tsx
+
+```tsx {3,9} showLineNumbers title="pages/_app.tsx"
+import "../styles/globals.css";
+import { AppType } from "next/dist/shared/lib/utils";
+import { trpc } from '../utils/trpc';
+
+const MyApp: AppType = ({ Component, pageProps }) => {
+  return <Component {...pageProps} />;
+};
+
+export default trpc.withTRPC(MyApp);
+```
+
+You're ready! Let's connect the server created now.
+
+## Use query
+
+Open `src/index.tsx` then, add import `trpc hook`.
+
+```ts {4} showLineNumbers title="pages/index.tsx" 
+import type { NextPage } from "next";
+import { FormEvent, useState } from "react";
+import styles from "../styles/Home.module.css";
+import { trpc } from "../utils/trpc";
+```
+
+And, use tRPC query hook like this.
+
+**I strongly recommend typing it instead of copy and paste it.**
+
+```tsx {6} showLineNumbers{7} title="pages/index.tsx"
+const [title, setTitle] = useState("");
+const [filter, setFilter] = useState("");
+const [error, setError] = useState("");
+const query = trpc.posts.useQuery(); // 👈 Let's type it!
+```
+
+When you type `const query = trpc.`, I think you see `posts` as a candidate, is it working?
+
+![useQuery](/assets/posts/trpc@10-hands-on/query-demo.gif)
+
+This is possible because tRPC use type information of router that you just created as the scheme for client. You don't need to generate some file like GraphQL and OpenAPI!
+
+Next, display query result like this.
+
+```tsx {10-16} title="pages/index.tsx"
+return (
+  <section className={styles.container}>
+    <main className={styles.main}>
+      <header className={styles.title}>
+        <h1>tRPC fast hands-on 🚀</h1>
+      </header>
+      <section className={styles.controller}>
+       {/* form component */}
+      </section>
+      <section className={styles.grid}>
+        {query.data?.map((data, i) => (
+          <article key={`article-${i}`} className={styles.card}>
+            <p>{data.title}</p>
+          </article>
+        ))}
+      </section>
+    </main>
+  </section>
+);
+```
+
+`query.data` is also type safe, so you will type `data.` inside callback function in map then, appears candidates which `id` and `title`.
+
+![type-safe-response](/assets/posts/trpc@10-hands-on/query-response-demo.gif)
+
+You see the following display on your local server, right?
+
+![Expected image of implemented the query](/assets/posts/trpc@10-hands-on/expect-query.jpeg)
+
+## Use query variable
+
+You can filter posts using `filter` parameter of `posts` query so let's set input text to query variables.
