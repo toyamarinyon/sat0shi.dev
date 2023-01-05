@@ -11,9 +11,9 @@ import NewTabLink from "../../components/NewTabLink.astro";
 
 Last year I wrote a [tRPC hands-on](/posts/trpc-hands-on). And I've glad to read it from many developers.
 
-However, tRPC is now v10 released, and there are many aspects of tRPC that need to be addressed in the above hands-on.
+However, tRPC is now v10 released, and there are many breaking changes, so the above hands-on can't use.
 
-So, in this post, I'll show you tRPC@10 hands-on. Please give it a try.
+Therefore, in this post, I'll show you tRPC@10 hands-on. Please give it a try.
 
 # StackBlitz ready
 
@@ -25,7 +25,12 @@ If you click the bellow button, you can proceed with this hands-on on StackBlitz
 
 You should see a page like this when you click the button. This is the StackBlitz loading screen.
 
+![StackBlitz loading page](/assets/posts/trpc@10-hands-on/stackblitz-init.jpeg)
+
 After about 20 seconds, you'll see the page change like this. This is the starter template page.
+
+![running local server on StackBlitz](/assets/posts/trpc@10-hands-on/running-dev-server-on-stackblitz.jpeg)
+
 
 On this page, you will display some posts retrieved by tRPC and also allow you to create posts by building a typesafe API with tRPC.
 
@@ -59,7 +64,7 @@ Use the `t.procedure.query()` to add a query procedure/endpoint to the router. T
 - `input`(optional): When provided, this should be a function that validates and casts the input of this procedure. It should return a strongly typed value when the input is valid or throw an error if the input is invalid. We recommend using a TypeScript validation library like [Zod](https://github.com/colinhacks/zod), [Superstruct](https://github.com/ianstormtaylor/superstruct) or [Yup](https://github.com/jquense/yup) for input validation.
 - `query`: This is the implementation of the procedure (a "resolver"). It's a function with a single `req` argument to represent the incoming request. The validated (and strongly typed!) input is passed into `req.input`.
 
-The following creates a query procedure called `posts` that returns posts object:
+The following creates a query procedure called `posts` that returns posts object: (Highlight the changed line)
 
 ```ts showLineNumbers {2, 5-19, 22-35} title="server/routers/_app.ts"
 import * as trpc from "@trpc/server";
@@ -192,7 +197,7 @@ Now, you finished to create router 🎉 Next, you will create a client with Next
 # Create tRPC utility for frontend and interact with a backend router
 
 Create a tRPC utility for Next.js using your API's type signature.
-Let's create a `./utils/trpc.ts` file with the following contents:
+Let's create a `utils/trpc.ts` file with the following contents:
 
 ```typescript showLineNumbers title="utils/trpc.ts"
 import { httpBatchLink } from '@trpc/client';
@@ -303,6 +308,8 @@ Set filter state to useQuery args:
 <Callout label="note">
   If you type `useQuery({ f`, editor suggests `filter` field.
 
+  ![useQuery](/assets/posts/trpc@10-hands-on/suggest-filter.gif)
+
   This is another power of tRPC. You can use the input scheme declared on the server as the interface of the query variable on the client. 
 
   Input scheme is declared on following:
@@ -350,6 +357,9 @@ Next, mutate on submitting the form.
 ```
 
 Then, you can create a post with tRPC!
+
+  ![useQuery](/assets/posts/trpc@10-hands-on/mutation-demo.gif)
+
 
 # Conclusion
 

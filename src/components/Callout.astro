@@ -9,25 +9,36 @@ function upperCaseFirst(string: string) {}
 
 <div class={`callout ${label}`}>
   <h4>{label}</h4>
+  <div class="callout-body">
     <slot />
+  </div>
 </div>
 
 <style>
   h4 {
     font-size: 1.2rem;
     text-transform: capitalize;
+    padding: 0.2rem 0.8rem;
+    color: white;
   }
   .callout {
-    padding: 1rem 1.5rem;
     border-radius: 4px;
   }
   .callout.tip {
-    background-color: #eaf4ff;
     border: solid 1px #3c80ca;
   }
+  .callout.tip h4{
+    background-color: #3c80ca
+  }
   .callout.note {
-    background-color: #e5ffe7;
     border: solid 1px #72ae8b;
+  }
+  .callout.note h4{
+    background-color: #72ae8b
+  }
+
+  .callout-body {
+    padding: 1rem 1.5rem;
   }
   p {
     margin-bottom: 0.3rem;
