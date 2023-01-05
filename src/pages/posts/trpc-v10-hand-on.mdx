@@ -19,6 +19,10 @@ So, in this post, I'll show you tRPC@10 hands-on. Please give it a try.
 
 If you click the bellow button, you can proceed with this hands-on on StackBlitz.(Of course, you can do it locally too.)
 
+<NewTabLink href="https://stackblitz.com/github/toyamarinyon/trpc-next-quick-start/tree/v10">
+  <img src="https://developer.stackblitz.com/img/open_in_stackblitz.svg" />
+</NewTabLink>
+
 You should see a page like this when you click the button. This is the StackBlitz loading screen.
 
 After about 20 seconds, you'll see the page change like this. This is the starter template page.
@@ -287,3 +291,81 @@ You see the following display on your local server, right?
 ## Use query variable
 
 You can filter posts using `filter` parameter of `posts` query so let's set input text to query variables.
+
+Set filter state to useQuery args:
+
+```tsx showLineNumbers{8} /filter/ title="pages/index.tsx"
+  const [filter, setFilter] = useState("");
+  const [error, setError] = useState("");
+  const query = trpc.posts.useQuery({ filter })
+```
+
+<Callout label="note">
+  If you type `useQuery({ f`, editor suggests `filter` field.
+
+  This is another power of tRPC. You can use the input scheme declared on the server as the interface of the query variable on the client. 
+
+  Input scheme is declared on following:
+
+  ```tsx showLineNumbers{21} title="server/routes/_app.ts"
+  export const appRouter = t.router({
+  posts: t.procedure
+    .input(
+      z
+        .object({
+          filter: z.string(),
+        })
+        .nullish()
+    )
+    .query(({ input }) => {
+      if (input?.filter == null || input.filter == '') {
+        return postList;
+      }
+      return postList.filter((post) => post.title.includes(input.filter));
+    }),
+  ```
+</Callout>
+
+
+## Use mutation
+
+In the last of this hands-on, let you create a mutation with tRPC.
+
+Since the form UI is already implemented, you can use the `title` variable as an input variable in the postCreate mutation.
+
+First, add mutation hook:
+
+```tsx showLineNumbers{10} title="pages/index.tsx"
+  const query = trpc.posts.useQuery({ filter });
+  const mutation = trpc.postCreate.useMutation();
+```
+
+Next, mutate on submitting the form.
+
+```tsx showLineNumbers{13} title="pages/index.tsx"
+  async function submitNewPost(e: FormEvent) {
+    e.preventDefault();
+    mutation.mutate({ title })
+  }
+```
+
+Then, you can create a post with tRPC!
+
+# Conclusion
+
+I don't think tRPC will solve all problems like the Swiss Army Knife or Silver Bullet, but I do think it will significantly increase the speed of launching a product.
+
+Especially I consider it has a high affinity for developer who want to build type-safe applications but feel GraphQL and OpenAPI are overreaching.
+
+Some of you who have read this far may have the following questions:
+
+- "I know the basics, but can I implement a real world application or use case?"
+
+- "Can I implement authentication and error handling?"
+
+- "Can I implement localization?"
+
+The answer is yes. I deploy application with tRPC to Vercel and get paid by my clients.
+This application uses firebase authentication to authenticate user and UI is Japanese.
+
+Once again, I will explain how to authenticate and localize and more. If you are curios it, please follow [my twitter account](https://twitter.com/toyamarinyon), I'll let you know.
