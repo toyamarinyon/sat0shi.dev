@@ -1,0 +1,33 @@
+---
+layout: "../../layouts/BlogPost.astro"
+title: Highlight a line on code block with Astro
+publishDate: 5 Jan 2023
+name: toyamarinyon
+description: Explain how to highlight a line on your code block with rehype-pretty-code
+---
+
+import Callout from "../../components/Callout.astro";
+import NewTabLink from "../../components/NewTabLink.astro";
+
+Built WebSite with Astro allows you to highlight your code blocks with no configuration, But it cannot highlight a specific line.
+
+If you use the Integration API Astro provided, you can modify markdown processes, but it is a bit too complex.
+
+This post will show you how to highlight a line on your code block with `rehype-pretty-code`.
+
+<Callout label="tip">
+  Astro documentation site is a very good example of cutom highlighting using the Integration API, and I encourage anyone interested to take a look.
+</Callout>
+
+This website is built with Astro. 
+Astro can syntax highlighting code block but can't highlighting a specific line default setting.
+
+On the other hand, Astro provides integration API which be able to 
+It's resolve to add markdown spec that specify how to highlighting line and implement this, because Prism and Shiki provide function to highlighting a specific line.
+I've tried to specify highlighted line ranges within the language meta string (leave a space after the language) with reference to Docusaurus.
+Highlighting with metadata string/Docusaurus
+Add an example of highlighting a specific line
+After this PR is merged, we can highlight a specific line in code block like that:
+
+
+
