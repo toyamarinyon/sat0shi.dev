@@ -17,17 +17,175 @@ This post will show you how to highlight a line on your code block with `rehype-
 
 <Callout label="tip">
   Astro documentation site is a very good example of cutom highlighting using the Integration API, and I encourage anyone interested to take a look.
+
+  <NewTabLink href="https://github.com/withastro/docs/blob/14379968fe4694075d259cc8fc9b661769c7ad78/astro.config.ts#L32">
+    Open on GitHub
+  </NewTabLink>
+
+  It can highlight diff in the code block like that:
+
+  ![Astro document site](/assets/posts/highlight-line-on-codeblock-with-astro/astro-doc.jpeg)
+
 </Callout>
 
-This website is built with Astro. 
-Astro can syntax highlighting code block but can't highlighting a specific line default setting.
+# Start with mdx-template
 
-On the other hand, Astro provides integration API which be able to 
-It's resolve to add markdown spec that specify how to highlighting line and implement this, because Prism and Shiki provide function to highlighting a specific line.
-I've tried to specify highlighted line ranges within the language meta string (leave a space after the language) with reference to Docusaurus.
-Highlighting with metadata string/Docusaurus
-Add an example of highlighting a specific line
-After this PR is merged, we can highlight a specific line in code block like that:
+Astro provides a template for mdx, and you can try it on StackBlitz, so let's start with it.
 
+<NewTabLink href="https://stackblitz.com/github/withastro/astro/tree/latest/examples/with-mdx">
+  ![Open in
+  StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)
+</NewTabLink>
+
+If you open the above template on StackBlitz, you can see the following:
+
+![starting-point](/assets/posts/highlight-line-on-codeblock-with-astro/starting-point.jpeg)
+
+This page will eventually look like this:
+
+![after](/assets/posts/highlight-line-on-codeblock-with-astro/after.jpeg)
+
+
+# Install Rehype Pretty Code
+
+First, install Rehype Pretty Code with npm. Stop the dev server and run the following command:
+
+```bash
+npm install --save-dev rehype-pretty-code
+```
+
+## What's Rehype Pretty Code?
+
+Rehype Pretty Code is a Rehype plugin that provides beautiful code blocks for your MD/MDX docs. It has advantages over other solutions such as Prism.
+<NewTabLink href="https://rehype-pretty-code.netlify.app/">
+View on WebSite.
+</NewTabLink>
+
+You will disable syntax highlighting with Astro's built-in syntax highlighting, and use Rehype Pretty Code instead.
+
+## Add rehype-pretty-code to Astro config
+
+Open `astro.config.mjs` and add the following code:
+
+```js showLineNumbers {4-26, 31-35} title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+import preact from "@astrojs/preact";
+import rehypePrettyCode from "rehype-pretty-code";
+
+const prettyCodeOptions = {
+  theme: "solarized-dark",
+  onVisitLine(node) {
+    if (node.children.length === 0) {
+      node.children = [
+        {
+          type: "text",
+          value: " ",
+        },
+      ];
+    }
+  },
+  onVisitHighlightedLine(node) {
+    node.properties.className.push("highlighted");
+  },
+  onVisitHighlightedWord(node) {
+    node.properties.className = ["word"];
+  },
+  tokensMap: {},
+};
+
+// https://astro.build/config
+export default defineConfig({
+  integrations: [mdx(), preact()],
+  markdown: {
+    extendDefaultPlugins: true,
+    syntaxHighlight: false,
+    rehypePlugins: [[rehypePrettyCode, prettyCodeOptions]],
+  },
+});
+```
+
+On line 32, you've disabled syntax highlighting with Astro's built-in. And on line 33, you've added Rehype Pretty Code to the rehypePlugins.
+
+Now, you can start the dev server and see the result:
+
+![install-rehype-pretty-format](/assets/posts/highlight-line-on-codeblock-with-astro/install-rehype-pretty-format.jpeg)
+
+# Add meta string to your code block
+
+Rehype pretty format provides a way to highlight a specific line, but you need to add a meta string to your code block.
+
+Open `src/pages/index.mdx` and add meta string `{1-3}` to code block.
+
+```mdx showLineNumbers{23} /{1-3}/ title="src/pages/index.mdx"
+```astro {1-3}
+```
+
+You can see the lines 1 to 3 are added `highlighted` css class if you insepect code block.
+
+![add-a-classname-to-a-highlight-line](/assets/posts/highlight-line-on-codeblock-with-astro/add-a-classname-to-a-highlight-line.gif)
+
+<Callout label="note">
+Rehype Pretty Code also provides another meta string to highlight a specific word or show line numbers. See the <NewTabLink href="https://rehype-pretty-code.netlify.app/">Rehype Pretty Code website</NewTabLink> for more information.
+</Callout>
+
+## Add style to the highlighted line
+
+You've already added a css class to the lines you want to highlight. Let's add style to it.
+
+First, create a layout to add `<style>` tag. Create `src/components/Layout.astro` and add the following code:
+
+```astro title="src/components/Layout.astro"
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <slot />
+    <style is:global>
+      div[data-rehype-pretty-code-fragment] { background-color: #111;}
+      pre > code {
+        display: grid;
+        background-color: rgba(200, 200, 255, .09);
+      }
+      .highlighted {
+        background-color: rgba(200,200,255,.1);
+        border-left-color: #60a5fa;
+        border-left-width: 3px;
+        border-left-style: solid;
+      }
+    </style>
+  </body>
+</html>
+```
+
+And open `src/pages/index.mdx`, and set this layout using `layout frontmatter`.
+
+```mdx showLineNumbers {1-3} title="src/pages/index.mdx"
+---
+layout: ../components/Layout.astro
+---
+import Counter from '../components/Counter.jsx';
+import Title from '../components/Title.astro';
+export const components = { h1: Title };
+
+```
+
+Now, you can see the highlighted line!
+
+![after](/assets/posts/highlight-line-on-codeblock-with-astro/after.jpeg)
+
+# Conclusion
+
+As you can see, you can highlight a line on a code block easily by using Rehyepe Pretty Code.
+
+This blog also use it to be able to highlight a line and show line numbers and a show file name.
+
+If you will check my blog's source code, you can see the bottom link.
+
+<NewTabLink href="https://github.com/toyamarinyon/sat0shi.dev">
+  toyamarinyon/sat0shi.dev
+</NewTabLink>
 
 
