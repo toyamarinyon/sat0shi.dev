@@ -1,0 +1,268 @@
+---
+layout: "../../layouts/BlogPost.astro"
+title: "Type-Safely Access Cloudflare D1 with Drizzle ORM"
+publishDate: 21 Mar 2023
+name: toyamarinyon
+description: Looking for a ORM to access Cloudflare D1 in a type-safe manner? Look no further than Drizzle ORM!
+---
+
+import Callout from "../../components/Callout.astro";
+
+Looking for a ORM to access Cloudflare D1 in a type-safe manner? Look no further than Drizzle ORM! In this article, we'll walk you through everything you need to know to get started through a sample project.
+
+# Introduction to Cloudflare D1 and Drizzle ORM
+
+Cloudflare D1 is a new distributed SQL database service that allows developers to deploy, scale, and manage their databases directly within Cloudflare's global network. D1 is built on top of SQLite, a lightweight and widely used database engine.
+
+Drizzle ORM is a TypeScript ORM for SQL databases designed with maximum type safety in mind. And Drizzle meant to be a library, not a framework. It stays as an opt-in solution all the time at any levels.
+
+# Why do not use Prisma
+
+Prisma is a popular ORM for Node.js and TypeScript, but it does not currently support Cloudflare D1. Drizzle ORM is a lightweight and flexible alternative that supports Cloudflare D1. If you want to use an ORM with Cloudflare D1, Drizzle is a great choice.
+
+# Let's give it a try!
+
+In order to truly understand the power of Cloudflare D1 and Drizzle ORM, it's important to dive in and start working with them firsthand. That's why we've put together a tutorial that walks you through the process of creating a simple ToDo app using these powerful tools.
+
+To get started, all you need to do is create a repository from the template, create a database, run migrations, and start up the app. From there, we'll guide you through the process of modifying the table schema and creating and executing migrations.
+
+By the end of this tutorial, you'll have a solid grasp of how to use Cloudflare D1 and Drizzle ORM to create and manage databases, as well as how to handle schema changes and perform migrations. So let's get started!
+
+## Sample Project Overview
+
+The sample project we'll be working with is a simple ToDo app. It allows users to create, read, and complete tasks. The app is built using the following technologies:
+
+- Host static content built by [Vite](https://vitejs.dev/) on Cloudflare Pages
+- Implement serverless functions for API endpoints using [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/platform/functions/)
+- Utilize [tRPC](https://trpc.io/) for type-safe communication between backend and frontend
+- Use [Cloudflare D1](https://developers.cloudflare.com/d1/) as a lightweight, SQLite-based database solution
+- Use [Drizzle](https://github.com/drizzle-team/drizzle-orm) as a ORM and migration generator
+
+Demo:
+
+<img src="/assets/posts/drizzle-intro/demo.gif" width="500" />
+
+## Create a repository
+
+First, create your repository from the template. This will create a new repository in your GitHub account and clone it to your local machine.
+
+```bash title="bash"
+gh repo create todo-demo --clone --public --template toyamarinyon/trpc-d1-todo
+cd todo-demo
+```
+
+Next, install the dependencies:
+
+```bash title="bash"
+npm install
+```
+
+<Callout label="note">
+  I prefer pnpm over npm but Cloudflare Pages builds do not yet support pnpm.
+</Callout>
+
+## Prepare database
+
+### Expose your database name
+
+In the following, replace `<DATABASE_NAME>` with your database name and execute. Use the following procedure.
+
+```bash title="bash"
+DEMO_DATABASE_NAME=<DATABASE_NAME>
+```
+
+### Create your database
+
+Run the following command and give your database a name:
+
+```bash title="bash"
+npx wrangler d1 create $DEMO_DATABASE_NAME
+```
+
+### Configure database binding
+
+To apply migration you need to configure database binding to wrangler.toml
+
+Add the following to your wrangler.toml file:
+
+```toml title="wrangler.toml"
+[[ d1_databases ]]
+binding = "<BINDING_NAME>"
+database_name = "<DATABASE_NAME>"
+database_id = "<UUID>"
+```
+
+You will find the above values from the output of the previous execution.
+
+<img src="/assets/posts/drizzle-intro/after-db.png" width="500" />
+
+
+## Show current schema
+
+I have created a schema. Open `db/schema/tasks.ts`, and you should be able to see the following:
+
+```ts title="db/schema/tasks.ts"
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+export const tasks = sqliteTable("tasks", {
+  id: integer("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  completionAt: integer("completion_at", { mode: "timestamp" }),
+});
+```
+
+This schema defines a `tasks` table with `drizzle-orm` so that you can access the table with type safety.
+
+```ts title="sample.ts"
+import { tasks } from "./db/schema/tasks";
+import { drizzle } from "drizzle-orm/d1";
+import { eq, isNull } from 'drizzle-orm/expressions'
+
+// Assuming that env.DB is a Cloudflare D1 instance, although this
+// is just an image code that doesn't actually work.
+const db = drizzle(env.DB);
+
+// Insert data
+await db.insert(tasks)
+  .values({
+    title: 'Hello task'
+    description: 'message'
+  })
+  .run();
+
+// Update data
+await db.update(tasks)
+  .values({
+    completionAt: new Date()
+  })
+  .run();
+
+// Delete data
+await db.delete(tasks)
+   .where(eq(tasks.id, 1))
+   .run()
+
+// Query data
+await db.select(tasks)
+  .where(isNull(tasks.completionAt))
+  .run();
+```
+
+`functions/api/[trpc].ts` is a sample trpc server that uses the above schema. 
+
+## Create a migration file from the schema
+
+`db/schema/tasks.ts` is a TypeScript schema file. In order to execute a database migration, it needs to be turned into an SQL file. Let's use `Drizzle Kit` to create SQL from the schema.
+
+To generate a migration using `Drizzle Kit`, run the `drizzle-kit generate:sqlite` command since Cloudflare D1 uses SQLite. Be sure to specify the path to your schema with the `--schema` option as it's located at `./db/schema/index.ts`.
+
+Additionally, the Cloudflare D1 migration tool requires migration files to be stored in `./migrations/`. Therefore, set the output path using the `--out` option to ensure that the generated migration files are saved in the correct folder.
+
+Here's the command you should run:
+
+```bash
+npx drizzle-kit generate:sqlite --schema=./db/schema/index.ts --out=./migrations
+```
+
+After running the command, you should see the following:
+
+<img src="/assets/posts/drizzle-intro/drizzle-kit.png" width="500" />
+
+
+
+## Apply a migration to your local database
+
+Cloudflare D1 provides migration tools. You can use it to check list of unapplied migrations:
+
+```bash title="bash"
+npx wrangler d1 migrations list $DEMO_DATABASE_NAME --local
+````
+
+Then you can see the following:
+
+```bash title="bash"
+┌────────────────────────────┐
+│ Name                       │
+├────────────────────────────┤
+│ 0000_dusty_dragon_lord.sql │
+└────────────────────────────┘
+```
+
+Open `migrations/0000_dusty_dragon_lord.sql` and you should see the following:
+
+```bash title="bash"
+$ cat migrations/0000_dusty_dragon_lord.sql
+
+CREATE TABLE tasks (
+        `id` integer PRIMARY KEY NOT NULL,
+        `title` text NOT NULL,
+        `description` text NOT NULL,
+        `completion_at` integer
+);
+```
+
+And you can use the following to apply any unapplied migrations:
+
+```bash title="bash"
+npx wrangler d1 migrations apply $DEMO_DATABASE_NAME --local
+```
+
+This completes the creation of the local database. Now let's run the ToDo application locally.
+
+### Run locally with Wrangler
+
+To run Cloudflare Pages locally, use the `wrangler pages dev` command; to run Cloudflare D1 as well, add the three options `--local`, `--persist`, and `--d1=<DATABASE_BINDING>`.
+
+Then add `npm run dev` to the end of the command to integrate Cloudflare Pages and Vite's dev server.
+
+```bash
+npx wrangler pages dev --local --persist --d1=DB -- npm run dev
+```
+
+This will then start serving your Pages project. You can press B to open the browser on your local site.
+
+# Deploying to Cloudflare Pages and Cloudflare Pages Functions
+
+1. Log in to the Cloudflare dashboard.
+1. Select your account in **Account Home** > **Pages**.
+1. Select **Create a project** > **Connect to Git**.
+1. Select your new GitHub repository.
+1. In the **Set up builds and deployments**, set `npm run build` as the **Build command**, and `dist` as the **Build output directory**.
+1. Select **Environment variables (advanced)** > **+ Add variable** > configure a `NODE_VERSION` variable with `17`.
+1. The deployment will succeed, but database binding is not yet, so setting it is.
+
+   1. Show **Settings** tab.
+   1. Select **Functions** menu.
+   1. Select **D1 database bindings** > **Add binding** > configure a `DB` variable with a value of `<DATABASE_BINDING>`
+
+1. Redeploy the latest deployment to apply the above settings.
+1. Migrate the D1 database on Cloudflare
+
+   Show unapplied migrations as list:
+
+   ```bash title="bash"
+   npx wrangler d1 migrations list $DEMO_DATABASE_NAME
+   ```
+
+   Then apply them:
+
+   ```bash title="bash"
+   npx wrangler d1 migrations apply $DEMO_DATABASE_NAME
+   ```
+
+   Open the page, you'll be able to see ToDo App on Cloudflare.
+
+
+## Conclusion
+
+In this post, we have learned that Drizzle ORM makes it easy to perform type-safe database operations, and Drizzle Kit can generate SQL migration files for us based on our schema.
+
+Overall, Drizzle ORM and Drizzle Kit are powerful tools that can make database operations simpler and more secure. With a little practice, developers can use them to build scalable and reliable applications on Cloudflare D1.
+
+
+## Next
+
+[Type-Safely database migration on Cloudflare D1 with Drizzle ORM.](/posts/drizzle-migration)
+
+We demonstrated how to add a priority column to a tasks table using Drizzle and how to apply the migration with Wrangler. We also updated the API and UI to accommodate the new column and showed how to run the application locally and deploy it to Cloudflare Pages.
